@@ -1,60 +1,13 @@
 import json
-
-class Yard():
-    id: int
-    name: str
-    location: str
-    beds: list
-
-
-    def __init__(self,id:int, name:str, location:str, bets:list=[]):
-        self.id = id
-        self.name = name
-        self.location = location
-        self.bets = bets
-
-
-    def fech_all():
-        data_file  = open('./utils/data.json',)
-        yards = json.loads(data_file.read())["yards"]
-        return yards
-
-
-    def update(self, yard):
-        self.id = yard.id
-        self.name = yard.usenamername
-        self.location = yard.location
-        self.bets = yard.bets
-
-
-
-class Bed():
-    id: int
-    plants: list
-
-
-    def __init__(self,id:int, plants:list=[]):
-        self.id = id
-        self.plants = plants
-
-
-    def fech_all():
-        data_file  = open('./utils/data.json',)
-        beds = json.loads(data_file.read())["beds"]
-        return beds
-
-
-    def update(self, bed):
-        self.id = bed.id
-        self.plants = bed.plants
+from typing import List
 
 
 class Plant():
-    id: int
+    _id: int
 
 
     def __init__(self,id:int):
-        self.id = id
+        self._id = id
 
 
     def fech_all():
@@ -64,4 +17,61 @@ class Plant():
 
 
     def update(self, plant):
-        self.id = plant.id
+        if plant.id:
+            self._id = plant.id
+
+
+class Bed():
+    _id: int
+    _plants: List[Plant]
+
+
+    def __init__(self,id:int, plants:List[Plant]=[]):
+        self._id = id
+        self._plants = plants
+
+
+    def fech_all():
+        data_file  = open('./utils/data.json',)
+        beds = json.loads(data_file.read())["beds"]
+        return beds
+
+
+    def update(self, bed):
+        if bed.id:
+            self._id = bed.id
+        if bed.plants:
+            self._plants = bed.plants
+
+
+class Yard():
+    _id: int
+    _name: str
+    _location: str
+    _beds: List[Bed]
+
+
+    def __init__(self,id:int, name:str, location:str, beds:List[Bed]=[]):
+        self._id = id
+        self._name = name
+        self._location = location
+        self._beds = beds 
+
+
+    def fech_all():
+        data_file  = open('./utils/data.json',)
+        yards = json.loads(data_file.read())["yards"]
+        return yards
+
+
+    def update(self, yard):
+        if yard.id:
+            self._id = yard.id
+        if yard.name:
+            self._name = yard.name
+        if yard.location:
+            self._location = yard.location
+        if yard.beds:
+            self._beds = yard.beds
+
+
