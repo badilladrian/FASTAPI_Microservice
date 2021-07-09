@@ -1,7 +1,4 @@
-yards = [{"name":"home","location":"LA","beds":[{"id": 1,"plants":[{"id": 2}]},{"id": 2,"plants":[{"id": 3}]}]},{"name":"favorite","location":"MI","beds":[{"id": 3,"plants":[{"id": 1}]}]}]
-beds = [{"id": 1,"plants":[{"id": 2}]},{"id": 2,"plants":[{"id": 3}]},{"id": 3,"plants":[{"id": 1}]}]
-plants = [{"id":1},{"id": 2},{"id": 3}]
-
+from MVC.models import Yard, Bed, Plant
 
 class ControllerYards:
     def __init__(self):
@@ -9,7 +6,12 @@ class ControllerYards:
 
         
     def get_all(self) -> dict:
-        return ({"message":"Listing all yards","yards":yards})
+        yards = self.fetch_all()
+        return ( { "message" : "Listing all yards", "yards" : yards } )
+
+
+    def fetch_all(self):
+        return Yard.fech_all()
 
 
 class ControllerBeds:
@@ -18,8 +20,12 @@ class ControllerBeds:
 
         
     def get_all(self) -> list:
+        beds = self.fetch_all()
         return ({"message":"Listing all beds","beds":beds})
         
+
+    def fetch_all(self):
+        return Bed.fech_all()
 
 class ControllerPlants:
     def __init__(self):
@@ -27,4 +33,9 @@ class ControllerPlants:
 
         
     def get_all(self) -> list:
+        plants = self.fetch_all()
         return ({"message":"Listing all plants","plants":plants})
+
+
+    def fetch_all(self):
+        return Plant.fech_all()
