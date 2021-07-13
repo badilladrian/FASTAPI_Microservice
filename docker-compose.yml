@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+    postgres:
+        image: postgres
+        container_name: postgres
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: "this-is-a-very-strong-passsword"
+            APP_DB_USER: farmly_user
+            APP_DB_PASS: farmly_password
+            APP_DB_NAME: farmly
+        ports:
+            - "5432:5432"
+        volumes:
+            - "./utils/scripts:/docker-entrypoint-initdb.d"

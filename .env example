@@ -1,0 +1,5 @@
+DB_HOST = "localhost"
+DB_NAME = "farmly"
+DB_USER = "farmly_user"
+DB_PASSWORD = "farmly_password"
+DB_PORT = 5432
