@@ -259,3 +259,5 @@ CREATE TABLE IF NOT EXISTS public.entry_pictures (
     picture bytea NOT NULL,
     CONSTRAINT entry_pictures_pkey PRIMARY KEY (id),
     CONSTRAINT fk_entry_id FOREIGN KEY (entry_id) REFERENCES public.entries (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION);
+
+  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO farmly_user;
