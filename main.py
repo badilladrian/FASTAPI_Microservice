@@ -44,8 +44,11 @@ def get_all_plants():
 
 @app.get('/entry_group')
 def get_all_entry_groups():
-    yards = entry_group_controller.get_all()
-    return ({'message': 'Listing all entry groups', 'entry_groups': yards})
+    entry_groups = entry_group_controller.get_all()
+    return ({
+        'message': 'Listing all entry groups',
+        'entry_groups': entry_groups,
+    })
 
 
 @app.post('/yard')
