@@ -1,8 +1,8 @@
 from MVC.models import Bed
+from MVC.models import EntryGroup
 from MVC.models import Plant
 from MVC.models import Yard
 from utils import db
-from utils.db import Database
 
 DATABASE = db.Database()
 
@@ -18,7 +18,12 @@ class ControllerYards:
         return ({'message': 'Listing all yards', 'yards': yards})
 
     def fetch_all(self):
-        query = 'SELECT Y.yard_id as id,Y.yard_name as name, Y.yard_location as location, B.bed_id  FROM YARD as Y, BED as B WHERE B.yard_id = Y.yard_id'
+        query = 'SELECT Y.yard_id as id,',
+        'Y.yard_name as name,',
+        'Y.yard_location as location,',
+        'B.bed_id as bed',
+        'FROM YARD as Y, BED as B',
+        'WHERE B.yard_id = Y.yard_id'
         query_result = DATABASE.execute(query)
         print(query_result)
         result = self.createModels(query_result)
@@ -26,8 +31,10 @@ class ControllerYards:
 
     def createModels(self, query):
         print(query)
-        return [self._yard_model.create(item[0], item[1], item[2], item[3])
-                for item in query]
+        return [
+            self._yard_model.create(item[0], item[1], item[2], item[3])
+            for item in query
+        ]
 
 
 class ControllerBeds:
@@ -69,4 +76,28 @@ class ControllerPlants:
         pass
 
     def delete(self):
+        pass
+
+
+class ControllerEntryGroups:
+    _entry_group_model = EntryGroup
+
+    def __init__(self):
+        self._entry_group_model = EntryGroup()
+
+    def get_all(self) -> dict:
+        entry_groups = self.fetch_all()
+        return ({
+            'message': 'Listing all entry groups',
+            'entry_groups': entry_groups,
+        })
+
+    def fetch_all(self):
+        query = 'SELECT * FROM entry_groups'
+        query_result = DATABASE.execute(query)
+        # print(query_result)
+        # result = self.createModels(query_result)
+        return query_result
+
+    def createModels(self, query):
         pass

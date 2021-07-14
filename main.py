@@ -1,12 +1,16 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from fastapi import Request
 
 from MVC.controllers import ControllerBeds
+from MVC.controllers import ControllerEntryGroups
 from MVC.controllers import ControllerPlants
 from MVC.controllers import ControllerYards
+
 
 yards_controller = ControllerYards()
 beds_controller = ControllerBeds()
 plants_controller = ControllerPlants()
+entry_group_controller = ControllerEntryGroups()
 app = FastAPI()
 
 
@@ -38,19 +42,25 @@ def get_all_plants():
     }
 
 
+@app.get('/entry_group')
+def get_all_entry_groups():
+    yards = entry_group_controller.get_all()
+    return ({'message': 'Listing all entry groups', 'entry_groups': yards})
+
+
 @app.post('/yard')
 def create_yard(request: Request):
     return dir(request)
 
 
 @app.post('/bed')
-def get_all_beds():
+def create_bed():
     beds = beds_controller.get_all()
     return ({'message': 'Listing all beds', 'beds': beds})
 
 
 @app.post('/plant')
-def get_all_plants():
+def create_plant():
     plants = plants_controller.get_all()
     return {
         'message': 'Listing all plants',

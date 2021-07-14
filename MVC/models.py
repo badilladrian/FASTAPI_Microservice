@@ -85,3 +85,24 @@ class Yard():
             self._location = yard.location
         if yard.beds:
             self._beds = yard.beds
+
+
+class EntryGroup():
+    _id: int
+    _group: str
+
+    def __init__(self):
+        pass
+
+    def create(self, id: int, group: str):
+        if id:
+            self._id = id
+        if group:
+            self._group = group
+        return self
+
+    def update(self, entry_group):
+        if entry_group.id:
+            self._id = entry_group.id
+        if entry_group.group:
+            self._group = entry_group.group
