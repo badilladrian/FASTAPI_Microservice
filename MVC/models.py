@@ -106,3 +106,29 @@ class EntryGroup():
             self._id = entry_group.id
         if entry_group.group:
             self._group = entry_group.group
+
+
+class EntryType():
+    _id: int
+    _type: str
+    _entry_groups: List[EntryGroup]
+
+    def __init__(self):
+        pass
+
+    def create(self, id: int, type: str, entry_groups: List[EntryGroup] = []):
+        if id:
+            self._id = id
+        if type:
+            self._type = type
+        if entry_groups:
+            self._entry_groups = entry_groups
+        return self
+
+    def update(self, entry_type):
+        if entry_type.id:
+            self._id = entry_type.id
+        if entry_type.type:
+            self._type = entry_type.type
+        if entry_type.entry_groups:
+            self._entry_groups = entry_type.entry_groups

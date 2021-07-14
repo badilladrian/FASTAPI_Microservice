@@ -1,5 +1,6 @@
 from MVC.models import Bed
 from MVC.models import EntryGroup
+from MVC.models import EntryType
 from MVC.models import Plant
 from MVC.models import Yard
 from utils import db
@@ -94,6 +95,27 @@ class ControllerEntryGroups:
 
     def fetch_all(self):
         query = 'SELECT * FROM entry_groups'
+        query_result = DATABASE.execute(query)
+        # print(query_result)
+        # result = self.createModels(query_result)
+        return query_result
+
+    def createModels(self, query):
+        pass
+
+
+class ControllerEntryTypes:
+    _entry_type_model = EntryType
+
+    def __init__(self):
+        self._entry_type_model = EntryType()
+
+    def get_all(self) -> dict:
+        entry_types = self.fetch_all()
+        return entry_types
+
+    def fetch_all(self):
+        query = 'SELECT type, entry_group_id FROM entry_types'
         query_result = DATABASE.execute(query)
         # print(query_result)
         # result = self.createModels(query_result)
