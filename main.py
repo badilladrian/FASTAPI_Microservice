@@ -4,6 +4,7 @@ from fastapi import Request
 from MVC.controllers import ControllerBeds
 from MVC.controllers import ControllerEntryGroups
 from MVC.controllers import ControllerEntryTypes
+from MVC.controllers import ControllerPlantFamilies
 from MVC.controllers import ControllerPlants
 from MVC.controllers import ControllerYards
 
@@ -13,6 +14,7 @@ beds_controller = ControllerBeds()
 plants_controller = ControllerPlants()
 entry_group_controller = ControllerEntryGroups()
 entry_types_controller = ControllerEntryTypes()
+plant_families_controller = ControllerPlantFamilies()
 app = FastAPI()
 
 
@@ -59,6 +61,15 @@ def get_all_entry_types():
     return ({
         'message': 'Listing all entry types',
         'entry_types': entry_types,
+    })
+
+
+@app.get('/plant_family')
+def get_all_plant_families():
+    plant_families = plant_families_controller.get_all()
+    return ({
+        'message': 'Listing all plant families',
+        'entry_types': plant_families,
     })
 
 

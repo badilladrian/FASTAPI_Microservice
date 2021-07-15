@@ -132,3 +132,24 @@ class EntryType():
             self._type = entry_type.type
         if entry_type.entry_groups:
             self._entry_groups = entry_type.entry_groups
+
+
+class PlantFamily():
+    _id: int
+    _plant_family: str
+
+    def __init__(self):
+        pass
+
+    def create(self, id: int, plant_family: str):
+        if id:
+            self._id = id
+        if plant_family:
+            self._plant_family = plant_family
+        return self
+
+    def update(self, plant_family):
+        if plant_family.id:
+            self._id = plant_family.id
+        if plant_family.plant_family:
+            self._plant_family = plant_family.plant_family
