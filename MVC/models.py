@@ -153,3 +153,24 @@ class PlantFamily():
             self._id = plant_family.id
         if plant_family.plant_family:
             self._plant_family = plant_family.plant_family
+
+
+class BotanicalCategory():
+    _id: int
+    _botanical_category: str
+
+    def __init__(self):
+        pass
+
+    def create(self, id: int, botanical_category: str):
+        if id:
+            self._id = id
+        if botanical_category:
+            self._botanical_category = botanical_category
+        return self
+
+    def update(self, botanical_category):
+        if botanical_category.id:
+            self._id = botanical_category.id
+        if botanical_category.botanical_category:
+            self._botanical_category = botanical_category.botanical_category

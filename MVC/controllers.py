@@ -1,4 +1,5 @@
 from MVC.models import Bed
+from MVC.models import BotanicalCategory
 from MVC.models import EntryGroup
 from MVC.models import EntryType
 from MVC.models import Plant
@@ -134,6 +135,23 @@ class ControllerPlantFamilies:
 
     def get_all(self) -> dict:
         query = 'SELECT plant_family FROM plant_families'
+        query_result = DATABASE.execute(query)
+        # print(query_result)
+        # result = self.createModels(query_result)
+        return query_result
+
+    def createModels(self, query):
+        pass
+
+
+class ControllerBotanicalCategories:
+    _botanical_category_model = BotanicalCategory
+
+    def __init__(self):
+        self._botanical_category_model = BotanicalCategory()
+
+    def get_all(self) -> dict:
+        query = 'SELECT botanical_category FROM botanical_categories'
         query_result = DATABASE.execute(query)
         # print(query_result)
         # result = self.createModels(query_result)
