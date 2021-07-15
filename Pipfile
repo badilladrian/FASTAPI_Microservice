@@ -12,6 +12,13 @@ psycopg2 = "*"
 python-dotenv = "*"
 
 [dev-packages]
+fastapi = {extras = ["all"], version = "*"}
+uvicorn = "*"
+typing = "*"
+python-dotenv = "*"
+pydantic = "*"
+pre-commit = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.9"

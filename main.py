@@ -1,5 +1,6 @@
+from typing import List
+
 from fastapi import FastAPI
-from fastapi import Request
 
 from MVC.controllers import ControllerBeds
 from MVC.controllers import ControllerBotanicalCategories
@@ -8,6 +9,8 @@ from MVC.controllers import ControllerEntryTypes
 from MVC.controllers import ControllerPlantFamilies
 from MVC.controllers import ControllerPlants
 from MVC.controllers import ControllerYards
+from MVC.models import PlantFamilyCreate
+from MVC.models import YardRequestCreate
 
 
 yards_controller = ControllerYards()
@@ -85,20 +88,20 @@ def get_all_botanical_categories():
 
 
 @app.post('/yard')
-def create_yard(request: Request):
-    return dir(request)
+def create_yard(yard_request: List[YardRequestCreate]):
+    message = 'Yards couldn´t be created'
+    if yards_controller.create(yard_request):
+        message = 'Yards created successfuly'
+    return ({
+        'message': message,
+    })
 
 
-@app.post('/bed')
-def create_bed():
-    beds = beds_controller.get_all()
-    return ({'message': 'Listing all beds', 'beds': beds})
-
-
-@app.post('/plant')
-def create_plant():
-    plants = plants_controller.get_all()
-    return {
-        'message': 'Listing all plants',
-        'plants': plants,
-    }
+@app.post('/plant_family')
+def create_plant_family(plant_family_request: List[PlantFamilyCreate]):
+    message = 'Plant families couldn´t be created'
+    if plant_families_controller.create(plant_family_request):
+        message = 'Plant families created successfuly'
+    return ({
+        'message': message,
+    })

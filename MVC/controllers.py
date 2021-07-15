@@ -1,43 +1,31 @@
+from typing import List
+
 from MVC.models import Bed
 from MVC.models import BotanicalCategory
 from MVC.models import EntryGroup
 from MVC.models import EntryType
 from MVC.models import Plant
 from MVC.models import PlantFamily
+from MVC.models import PlantFamilyCreate
 from MVC.models import Yard
-from utils import db
-
-DATABASE = db.Database()
+from MVC.models import YardRequestCreate
+from utils.db import session
 
 
 class ControllerYards:
-    _yard_model = Yard
+    _yards = list[Yard]
 
     def __init__(self):
-        self._yard_model = Yard()
+        self._yards = self.get_all()
 
-    def get_all(self) -> dict:
-        yards = self.fetch_all()
-        return ({'message': 'Listing all yards', 'yards': yards})
+    def get_all(self):
+        return (session.query(Yard).all())
 
-    def fetch_all(self):
-        query = 'SELECT Y.yard_id as id,',
-        'Y.yard_name as name,',
-        'Y.yard_location as location,',
-        'B.bed_id as bed',
-        'FROM YARD as Y, BED as B',
-        'WHERE B.yard_id = Y.yard_id'
-        query_result = DATABASE.execute(query)
-        print(query_result)
-        result = self.createModels(query_result)
-        return result
-
-    def createModels(self, query):
-        print(query)
-        return [
-            self._yard_model.create(item[0], item[1], item[2], item[3])
-            for item in query
-        ]
+    def create(self, yard_request: List[YardRequestCreate]) -> list[Yard]:
+        self._yards = [Yard.create(yard) for yard in yard_request]
+        session.add_all(self._yards)
+        session.commit
+        return self._yards
 
 
 class ControllerBeds:
@@ -59,10 +47,7 @@ class ControllerPlants:
         pass
 
     def getOne(self):
-        query = 'SELECT id FROM PLANT where id=1'
-        result = DATABASE.execute(query)
-        # result = self._plant.create(result)
-        return result
+        pass
 
     def get_all(self) -> dict:
         plants = self.fetch_all()
@@ -96,13 +81,6 @@ class ControllerEntryGroups:
         })
 
     def fetch_all(self):
-        query = 'SELECT * FROM entry_groups'
-        query_result = DATABASE.execute(query)
-        # print(query_result)
-        # result = self.createModels(query_result)
-        return query_result
-
-    def createModels(self, query):
         pass
 
 
@@ -117,31 +95,27 @@ class ControllerEntryTypes:
         return entry_types
 
     def fetch_all(self):
-        query = 'SELECT type, entry_group_id FROM entry_types'
-        query_result = DATABASE.execute(query)
-        # print(query_result)
-        # result = self.createModels(query_result)
-        return query_result
-
-    def createModels(self, query):
         pass
 
 
 class ControllerPlantFamilies:
-    _plant_family_model = PlantFamily
+    _plant_families = list[PlantFamily]
 
     def __init__(self):
-        self._plant_family_model = PlantFamily()
+        self._yards = self.get_all()
 
-    def get_all(self) -> dict:
-        query = 'SELECT plant_family FROM plant_families'
-        query_result = DATABASE.execute(query)
-        # print(query_result)
-        # result = self.createModels(query_result)
-        return query_result
+    def create(self, plant_families_request: List[PlantFamilyCreate]) -> list[PlantFamily]:
+        self._plant_families = [
+            PlantFamily.create(
+                plant_family,
+            ) for plant_family in plant_families_request
+        ]
+        session.add_all(self._plant_families)
+        session.commit
+        return self._plant_families
 
-    def createModels(self, query):
-        pass
+    def get_all(self) -> list[PlantFamily]:
+        return (session.query(PlantFamily).all())
 
 
 class ControllerBotanicalCategories:
@@ -151,11 +125,7 @@ class ControllerBotanicalCategories:
         self._botanical_category_model = BotanicalCategory()
 
     def get_all(self) -> dict:
-        query = 'SELECT botanical_category FROM botanical_categories'
-        query_result = DATABASE.execute(query)
-        # print(query_result)
-        # result = self.createModels(query_result)
-        return query_result
+        pass
 
     def createModels(self, query):
         pass
