@@ -65,7 +65,7 @@ class Yard(Base):
     _id = Column('id', Integer, primary_key=True)
     _name = Column('name', String)
 
-    def __init__(self, name):
+    def __init__(self, name) -> None:
         self._name = name
 
     def update(self, yard):
