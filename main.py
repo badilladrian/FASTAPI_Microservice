@@ -42,7 +42,10 @@ def get_all_yards():
 @app.get('/bed')
 def get_all_beds():
     beds = beds_controller.get_all()
-    return ({'message': 'Listing all beds', 'beds': beds})
+    return ({
+        'message': 'Listing all beds',
+        'beds': beds,
+    })
 
 
 @app.get('/plant')
