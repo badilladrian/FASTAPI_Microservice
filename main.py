@@ -7,6 +7,7 @@ from MVC.controllers import ControllerEntryTypes
 from MVC.controllers import ControllerPlantFamilies
 from MVC.controllers import ControllerPlants
 from MVC.controllers import ControllerYards
+from MVC.models import BedRequestCreate
 from MVC.models import PlantFamilyRequestCreate
 from MVC.models import YardRequestCreate
 
@@ -27,6 +28,9 @@ async def root():
         'message': 'This is the best farmer assistence app ever!',
     }
 
+# Yard endpoints
+# GET
+
 
 @app.get('/yard')
 def get_all_yards():
@@ -37,12 +41,36 @@ def get_all_yards():
     })
 
 
+# POST
+@app.post('/yard')
+def create_yard(request: list[YardRequestCreate]):
+    message = 'Yards couldn´t be created'
+    if yards_controller.create(request=request):
+        message = 'Yards created successfuly'
+    return ({
+        'message': message,
+    })
+
+
+# Bed endpoints
+# GET
 @app.get('/bed')
 def get_all_beds():
     beds = beds_controller.get_all()
     return ({
         'message': 'Listing all beds',
         'beds': beds,
+    })
+
+
+# POST
+@app.post('/bed')
+def create_bed(request: list[BedRequestCreate]):
+    message = 'Beds couldn´t be created'
+    if beds_controller.create(request=request):
+        message = 'Beds created successfuly'
+    return ({
+        'message': message,
     })
 
 
@@ -79,16 +107,6 @@ def get_all_plant_families():
     return ({
         'message': 'Listing all plant families',
         'entry_types': plant_families,
-    })
-
-
-@app.post('/yard')
-def create_yard(request: list[YardRequestCreate]):
-    message = 'Yards couldn´t be created'
-    if yards_controller.create(request=request):
-        message = 'Yards created successfuly'
-    return ({
-        'message': message,
     })
 
 

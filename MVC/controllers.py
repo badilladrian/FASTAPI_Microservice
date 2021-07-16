@@ -1,4 +1,5 @@
 from MVC.models import Bed
+from MVC.models import BedRequestCreate
 from MVC.models import BotanicalCategory
 from MVC.models import EntryGroup
 from MVC.models import EntryType
@@ -27,16 +28,19 @@ class ControllerYards:
 
 
 class ControllerBeds:
+    _beds = list[Bed]
+
     def __init__(self):
-        pass
+        self._beds = self.get_all()
 
     def get_all(self) -> dict:
-        beds = self.fetch_all()
-        return beds
+        return (session.query(Bed).all())
 
-    def fetch_all(self):
-        beds = Bed()
-        return beds.fech_all()
+    def create(self, request: list[BedRequestCreate]) -> list[Bed]:
+        self._beds = [Bed.create(bed) for bed in request]
+        session.add_all(self._beds)
+        session.commit
+        return self._beds
 
 
 class ControllerPlants:

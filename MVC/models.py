@@ -28,27 +28,23 @@ class Plant(BaseModel):
             self._id = id
 
 
-class Bed(BaseModel):
-    _id: int
-    _plants: list[Plant]
+class BedRequestCreate(BaseModel):
+    pass
 
-    def __init__(self):
-        pass
 
-    def create(self, id: int, plants: list[Plant] = []):
-        if id:
-            self._id = id
-        if plants:
-            self._plants = plants
+class Bed(Base):
+    __tablename__ = 'beds'
+    _id = Column('id', Integer, primary_key=True)
 
-    def fech_all(self):
-        pass
+    def __init__(self) -> None:
+        self._id
 
-    def update(self, bed):
-        if bed.id:
-            self._id = bed.id
-        if bed.plants:
-            self._plants = bed.plants
+    @staticmethod
+    def create(request: BedRequestCreate) -> Bed:
+        return Bed(request)
+
+    def __repr__(self):
+        return {'id': self._id}
 
 
 class YardRequestCreate(BaseModel):
