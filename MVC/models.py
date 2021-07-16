@@ -1,14 +1,18 @@
-from typing import List
+from __future__ import annotations
 
 from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm.decl_api import DeclarativeMeta
 
 from utils.db import engine
+BASE = automap_base()
 
-Base = automap_base()
+
+class Base(metaclass=DeclarativeMeta):
+    __abstract__ = True
 
 
 class Plant(BaseModel):
@@ -18,10 +22,7 @@ class Plant(BaseModel):
         pass
 
     def fech_all(self):
-        # db = Database()
-        query = 'SELECT * FROM plant'
-        plants = db.execute(query)
-        return plants
+        pass
 
     def update(self, plant):
         if plant.id:
@@ -34,22 +35,19 @@ class Plant(BaseModel):
 
 class Bed(BaseModel):
     _id: int
-    _plants: List[Plant]
+    _plants: list[Plant]
 
     def __init__(self):
         pass
 
-    def create(self, id: int, plants: List[Plant] = []):
+    def create(self, id: int, plants: list[Plant] = []):
         if id:
             self._id = id
         if plants:
             self._plants = plants
 
     def fech_all(self):
-        # db = Database()
-        query = 'SELECT * FROM bed'
-        beds = db.execute(query)
-        return beds
+        pass
 
     def update(self, bed):
         if bed.id:
@@ -59,29 +57,31 @@ class Bed(BaseModel):
 
 
 class YardRequestCreate(BaseModel):
-    name: str
+    _name: str
 
 
 class Yard(Base):
     __tablename__ = 'yards'
-    id = Column(Integer, primary_key=True)
-    name: Column('name', String)
+    _id = Column('id', Integer, primary_key=True)
+    _name = Column('name', String)
+
+    def __init__(self, name):
+        self._name = name
 
     def update(self, yard):
         if yard.id:
-            self.id = yard.id
+            self._id = yard.id
         if yard.name:
-            self.name = yard.name
+            self._name = yard.name
 
     @staticmethod
-    def create(yard: YardRequestCreate):
-        if yard.name:
-            return Yard(
-                name=yard.name,
-            )
+    def create(request: YardRequestCreate) -> Yard:
+        return Yard(
+            name=request._name,
+        )
 
     def __repr__(self):
-        return {'id': self.id, 'name': self.name}
+        return {'id': self._id, 'name': self._name}
 
 
 class EntryGroup():
@@ -108,12 +108,12 @@ class EntryGroup():
 class EntryType():
     _id: int
     _type: str
-    _entry_groups: List[EntryGroup]
+    _entry_groups: list[EntryGroup]
 
     def __init__(self):
         pass
 
-    def create(self, id: int, type: str, entry_groups: List[EntryGroup] = []):
+    def create(self, id: int, type: str, entry_groups: list[EntryGroup] = []):
         if id:
             self._id = id
         if type:
@@ -131,27 +131,32 @@ class EntryType():
             self._entry_groups = entry_type.entry_groups
 
 
-class PlantFamilyCreate(BaseModel):
-    plant_family: str
+class PlantFamilyRequestCreate(BaseModel):
+    _plant_family: str
+
+    def __repr__(self):
+        return {'plant_family': self._plant_family}
 
 
 class PlantFamily(Base):
     __tablename__ = 'plant_families'
     id = Column(Integer, primary_key=True)
-    plant_family: Column('plant_family', String)
+    _plant_family = Column('plant_family', String)
 
-    def update(self, plant_family):
-        if plant_family.id:
-            self._id = plant_family.id
-        if plant_family.plant_family:
-            self._plant_family = plant_family.plant_family
+    def __init__(self, plant_family):
+        self._plant_family = plant_family
 
-    @staticmethod
-    def create(yard: PlantFamilyCreate):
-        if yard.plant_family:
-            return PlantFamily(
-                plant_family=yard.plant_family,
-            )
+    def update(self, request):
+        if request.id:
+            self._id = request.id
+        if request.plant_family:
+            self._plant_family = request._plant_family
+
+    @ staticmethod
+    def create(request: PlantFamilyRequestCreate) -> PlantFamily:
+        return PlantFamily(
+            plant_family=request._plant_family,
+        )
 
     def __repr__(self):
         return {'id': self._id, 'plant_family': self._plant_family}
@@ -178,4 +183,4 @@ class BotanicalCategory():
             self._botanical_category = botanical_category.botanical_category
 
 
-Base.prepare(engine, reflect=True)
+BASE.prepare(engine, reflect=True)

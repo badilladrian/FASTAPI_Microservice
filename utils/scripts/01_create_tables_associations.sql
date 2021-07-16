@@ -66,11 +66,12 @@ CREATE SEQUENCE IF NOT EXISTS public.yards_id_seq
 -- Table: public.yards
 CREATE TABLE IF NOT EXISTS public.yards (
     id integer NOT NULL DEFAULT nextval('yards_id_seq'::regclass),
-    user_id integer NOT NULL,
-    address_id integer NOT NULL,
-    CONSTRAINT yards_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES public.addresses (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+    name text COLLATE pg_catalog."default",
+    -- user_id integer NOT NULL,
+    -- address_id integer NOT NULL,
+    CONSTRAINT yards_pkey PRIMARY KEY (id)
+    -- CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES public.addresses (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+    -- CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- SEQUENCE: public.beds_id_seq
