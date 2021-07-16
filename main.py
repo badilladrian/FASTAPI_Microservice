@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import FastAPI
 
 from MVC.controllers import ControllerBeds
@@ -9,7 +7,7 @@ from MVC.controllers import ControllerEntryTypes
 from MVC.controllers import ControllerPlantFamilies
 from MVC.controllers import ControllerPlants
 from MVC.controllers import ControllerYards
-from MVC.models import PlantFamilyCreate
+from MVC.models import PlantFamilyRequestCreate
 from MVC.models import YardRequestCreate
 
 
@@ -85,9 +83,9 @@ def get_all_plant_families():
 
 
 @app.post('/yard')
-def create_yard(yard_request: List[YardRequestCreate]):
+def create_yard(request: list[YardRequestCreate]):
     message = 'Yards couldn´t be created'
-    if yards_controller.create(yard_request):
+    if yards_controller.create(request=request):
         message = 'Yards created successfuly'
     return ({
         'message': message,
@@ -95,7 +93,7 @@ def create_yard(yard_request: List[YardRequestCreate]):
 
 
 @app.post('/plant_family')
-def create_plant_family(plant_family_request: List[PlantFamilyCreate]):
+def create_plant_family(plant_family_request: list[PlantFamilyRequestCreate]):
     message = 'Plant families couldn´t be created'
     if plant_families_controller.create(plant_family_request):
         message = 'Plant families created successfuly'

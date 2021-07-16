@@ -5,14 +5,9 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm.decl_api import DeclarativeMeta
 
 from utils.db import engine
-BASE = automap_base()
-
-
-class Base(metaclass=DeclarativeMeta):
-    __abstract__ = True
+Base = automap_base()
 
 
 class Plant(BaseModel):
@@ -57,7 +52,7 @@ class Bed(BaseModel):
 
 
 class YardRequestCreate(BaseModel):
-    _name: str
+    name: str
 
 
 class Yard(Base):
@@ -77,7 +72,7 @@ class Yard(Base):
     @staticmethod
     def create(request: YardRequestCreate) -> Yard:
         return Yard(
-            name=request._name,
+            name=request.name,
         )
 
     def __repr__(self):
@@ -183,4 +178,4 @@ class BotanicalCategory():
             self._botanical_category = botanical_category.botanical_category
 
 
-BASE.prepare(engine, reflect=True)
+Base.prepare(engine, reflect=True)

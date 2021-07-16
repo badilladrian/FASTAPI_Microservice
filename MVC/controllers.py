@@ -1,12 +1,10 @@
-from typing import List
-
 from MVC.models import Bed
 from MVC.models import BotanicalCategory
 from MVC.models import EntryGroup
 from MVC.models import EntryType
 from MVC.models import Plant
 from MVC.models import PlantFamily
-from MVC.models import PlantFamilyCreate
+from MVC.models import PlantFamilyRequestCreate
 from MVC.models import Yard
 from MVC.models import YardRequestCreate
 from utils.db import session
@@ -21,8 +19,8 @@ class ControllerYards:
     def get_all(self):
         return (session.query(Yard).all())
 
-    def create(self, yard_request: List[YardRequestCreate]) -> list[Yard]:
-        self._yards = [Yard.create(yard) for yard in yard_request]
+    def create(self, request: list[YardRequestCreate]) -> list[Yard]:
+        self._yards = [Yard.create(yard) for yard in request]
         session.add_all(self._yards)
         session.commit
         return self._yards
@@ -104,7 +102,7 @@ class ControllerPlantFamilies:
     def __init__(self):
         self._yards = self.get_all()
 
-    def create(self, plant_families_request: List[PlantFamilyCreate]) -> list[PlantFamily]:
+    def create(self, plant_families_request: list[PlantFamilyRequestCreate]) -> list[PlantFamily]:
         self._plant_families = [
             PlantFamily.create(
                 plant_family,
