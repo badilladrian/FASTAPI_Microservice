@@ -143,7 +143,7 @@ class PlantFamily(Base):
     id = Column(Integer, primary_key=True)
     _plant_family = Column('plant_family', String)
 
-    def __init__(self, plant_family):
+    def __init__(self, plant_family) -> None:
         self._plant_family = plant_family
 
     def update(self, request):
