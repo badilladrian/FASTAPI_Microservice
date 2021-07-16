@@ -33,7 +33,10 @@ async def root():
 @app.get('/yard')
 def get_all_yards():
     yards = yards_controller.get_all()
-    return ({'message': 'Listing all yards', 'yards': yards})
+    return ({
+        'message': 'Listing all yards',
+        'yards': yards,
+    })
 
 
 @app.get('/bed')
