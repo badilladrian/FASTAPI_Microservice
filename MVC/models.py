@@ -2,49 +2,14 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 from sqlalchemy import Column
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 from utils.db import engine
-Base = automap_base()
-
-
-class Plant(BaseModel):
-    _id: int
-
-    def __init__(self):
-        pass
-
-    def fech_all(self):
-        pass
-
-    def update(self, plant):
-        if plant.id:
-            self._id = plant.id
-
-    def create(self, id: int):
-        if id:
-            self._id = id
-
-
-class BedRequestCreate(BaseModel):
-    pass
-
-
-class Bed(Base):
-    __tablename__ = 'beds'
-    _id = Column('id', Integer, primary_key=True)
-
-    def __init__(self) -> None:
-        self._id
-
-    @staticmethod
-    def create(request: BedRequestCreate) -> Bed:
-        return Bed(request)
-
-    def __repr__(self):
-        return {'id': self._id}
+Base = declarative_base()
 
 
 class YardRequestCreate(BaseModel):
@@ -53,17 +18,18 @@ class YardRequestCreate(BaseModel):
 
 class Yard(Base):
     __tablename__ = 'yards'
-    _id = Column('id', Integer, primary_key=True)
-    _name = Column('name', String)
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String)
+    beds = relationship('Bed')
 
     def __init__(self, name) -> None:
-        self._name = name
+        self.name = name
 
     def update(self, yard):
         if yard.id:
-            self._id = yard.id
+            self.id = yard.id
         if yard.name:
-            self._name = yard.name
+            self.name = yard.name
 
     @staticmethod
     def create(request: YardRequestCreate) -> Yard:
@@ -72,106 +38,49 @@ class Yard(Base):
         )
 
     def __repr__(self):
-        return {'id': self._id, 'name': self._name}
+        return {'id': self.id, 'name': self.name, 'beds': self.beds}
 
 
-class EntryGroup():
-    _id: int
-    _group: str
-
-    def __init__(self):
-        pass
-
-    def create(self, id: int, group: str):
-        if id:
-            self._id = id
-        if group:
-            self._group = group
-        return self
-
-    def update(self, entry_group):
-        if entry_group.id:
-            self._id = entry_group.id
-        if entry_group.group:
-            self._group = entry_group.group
+class BedRequestCreate(BaseModel):
+    yard: int
 
 
-class EntryType():
-    _id: int
-    _type: str
-    _entry_groups: list[EntryGroup]
+class Bed(Base):
+    __tablename__ = 'beds'
+    id = Column('id', Integer, primary_key=True)
+    yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
+    plants = relationship('Plant')
 
-    def __init__(self):
-        pass
+    def __init__(self, yard) -> None:
+        self.yard_id = yard
 
-    def create(self, id: int, type: str, entry_groups: list[EntryGroup] = []):
-        if id:
-            self._id = id
-        if type:
-            self._type = type
-        if entry_groups:
-            self._entry_groups = entry_groups
-        return self
-
-    def update(self, entry_type):
-        if entry_type.id:
-            self._id = entry_type.id
-        if entry_type.type:
-            self._type = entry_type.type
-        if entry_type.entry_groups:
-            self._entry_groups = entry_type.entry_groups
-
-
-class PlantFamilyRequestCreate(BaseModel):
-    _plant_family: str
+    @staticmethod
+    def create(request: BedRequestCreate) -> Plant:
+        return Bed(request.yard)
 
     def __repr__(self):
-        return {'plant_family': self._plant_family}
+        return {'id': self.id, 'yard': self.yard_id, 'plants': self.plants}
 
 
-class PlantFamily(Base):
-    __tablename__ = 'plant_families'
-    id = Column(Integer, primary_key=True)
-    _plant_family = Column('plant_family', String)
-
-    def __init__(self, plant_family) -> None:
-        self._plant_family = plant_family
-
-    def update(self, request):
-        if request.id:
-            self._id = request.id
-        if request.plant_family:
-            self._plant_family = request._plant_family
-
-    @ staticmethod
-    def create(request: PlantFamilyRequestCreate) -> PlantFamily:
-        return PlantFamily(
-            plant_family=request._plant_family,
-        )
-
-    def __repr__(self):
-        return {'id': self._id, 'plant_family': self._plant_family}
+class PlantRequestCreate(BaseModel):
+    bed: int
 
 
-class BotanicalCategory():
-    _id: int
-    _botanical_category: str
+class Plant(Base):
+    __tablename__ = 'plants'
+    id = Column('id', Integer, primary_key=True)
+    bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
 
-    def __init__(self):
+    def __init__(self, bed) -> None:
+        self.bed_id = bed
         pass
 
-    def create(self, id: int, botanical_category: str):
-        if id:
-            self._id = id
-        if botanical_category:
-            self._botanical_category = botanical_category
-        return self
+    @staticmethod
+    def create(request: PlantRequestCreate) -> Plant:
+        return Plant(request.bed)
 
-    def update(self, botanical_category):
-        if botanical_category.id:
-            self._id = botanical_category.id
-        if botanical_category.botanical_category:
-            self._botanical_category = botanical_category.botanical_category
+    def __repr__(self):
+        return {'id': self.id, 'bed': self.bed_id}
 
 
-Base.prepare(engine, reflect=True)
+Base.metadata.create_all(engine)

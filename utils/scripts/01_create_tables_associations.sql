@@ -10,7 +10,7 @@ MINVALUE 1
 MAXVALUE 2147483647
 CACHE 1;
 
--- Table: public.addresses
+-- TABLE: public.addresses
 CREATE TABLE IF NOT EXISTS public.addresses (
     id integer NOT NULL DEFAULT nextval('addresses_id_seq'::regclass),
     country text COLLATE pg_catalog."default" NOT NULL,
@@ -30,7 +30,7 @@ CREATE SEQUENCE IF NOT EXISTS public.users_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.users
+-- TABLE: public.users
 CREATE TABLE IF NOT EXISTS public.users (
     id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
     email text COLLATE pg_catalog."default" NOT NULL,
@@ -63,7 +63,7 @@ CREATE SEQUENCE IF NOT EXISTS public.yards_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.yards
+-- TABLE: public.yards
 CREATE TABLE IF NOT EXISTS public.yards (
     id integer NOT NULL DEFAULT nextval('yards_id_seq'::regclass),
     name text COLLATE pg_catalog."default",
@@ -82,7 +82,7 @@ CREATE SEQUENCE IF NOT EXISTS public.beds_id_seq
     CACHE 1;
 
 
--- Table: public.beds
+-- TABLE: public.beds
 CREATE TABLE IF NOT EXISTS public.beds (
     id integer NOT NULL DEFAULT nextval('beds_id_seq'::regclass),
     yard_id integer NOT NULL,
@@ -99,7 +99,7 @@ CREATE SEQUENCE IF NOT EXISTS public.botanical_categories_id_seq
     CACHE 1;
 
 
--- Table: public.botanical_categories
+-- TABLE: public.botanical_categories
 CREATE TABLE IF NOT EXISTS public.botanical_categories (
     id integer NOT NULL DEFAULT nextval('botanical_categories_id_seq'::regclass),
     botanical_category text COLLATE pg_catalog."default" NOT NULL,
@@ -113,7 +113,7 @@ CREATE SEQUENCE IF NOT EXISTS public.plant_families_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.plant_families
+-- TABLE: public.plant_families
 CREATE TABLE IF NOT EXISTS public.plant_families (
     id integer NOT NULL DEFAULT nextval('plant_families_id_seq'::regclass),
     plant_family text COLLATE pg_catalog."default" NOT NULL,
@@ -126,7 +126,7 @@ CREATE SEQUENCE IF NOT EXISTS public.plants_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.plants
+-- TABLE: public.plants
 CREATE TABLE IF NOT EXISTS public.plants (
     id integer NOT NULL DEFAULT nextval('plants_id_seq'::regclass),
     plant text COLLATE pg_catalog."default" NOT NULL,
@@ -144,7 +144,7 @@ CREATE SEQUENCE IF NOT EXISTS public.cultivars_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.cultivars
+-- TABLE: public.cultivars
 CREATE TABLE IF NOT EXISTS public.cultivars (
     id integer NOT NULL DEFAULT nextval('cultivars_id_seq'::regclass),
     cultivar text COLLATE pg_catalog."default" NOT NULL,
@@ -171,7 +171,7 @@ CREATE SEQUENCE IF NOT EXISTS public.entry_groups_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.entry_groups
+-- TABLE: public.entry_groups
 CREATE TABLE IF NOT EXISTS public.entry_groups (
     id integer NOT NULL DEFAULT nextval('entry_groups_id_seq'::regclass),
     "group" text COLLATE pg_catalog."default" NOT NULL,
@@ -185,7 +185,7 @@ CREATE SEQUENCE IF NOT EXISTS public.entry_types_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.entry_types
+-- TABLE: public.entry_types
 CREATE TABLE IF NOT EXISTS public.entry_types (
     id integer NOT NULL DEFAULT nextval('entry_types_id_seq'::regclass),
     type text COLLATE pg_catalog."default" NOT NULL,
@@ -201,7 +201,7 @@ CREATE SEQUENCE IF NOT EXISTS public.plantings_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.plantings
+-- TABLE: public.plantings
 CREATE TABLE IF NOT EXISTS public.plantings (
     id integer NOT NULL DEFAULT nextval('plantings_id_seq'::regclass),
     cultivar_id integer NOT NULL,
@@ -218,7 +218,7 @@ CREATE SEQUENCE IF NOT EXISTS public.journals_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.journals
+-- TABLE: public.journals
 CREATE TABLE IF NOT EXISTS public.journals (
     id integer NOT NULL DEFAULT nextval('journals_id_seq'::regclass),
     planting_id integer NOT NULL,
@@ -233,7 +233,7 @@ CREATE SEQUENCE IF NOT EXISTS public.entries_id_seq
     MAXVALUE 2147483647
     CACHE 1;
 
--- Table: public.entries
+-- TABLE: public.entries
 CREATE TABLE IF NOT EXISTS public.entries (
     id integer NOT NULL DEFAULT nextval('entries_id_seq'::regclass),
     entry_type_id integer NOT NULL,
@@ -253,7 +253,7 @@ CREATE SEQUENCE IF NOT EXISTS public.entry_pictures_id_seq
     CACHE 1;
 
 
--- Table: public.entry_pictures
+-- TABLE: public.entry_pictures
 CREATE TABLE IF NOT EXISTS public.entry_pictures (
     id integer NOT NULL DEFAULT nextval('entry_pictures_id_seq'::regclass),
     entry_id integer NOT NULL,

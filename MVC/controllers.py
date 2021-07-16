@@ -1,11 +1,7 @@
 from MVC.models import Bed
 from MVC.models import BedRequestCreate
-from MVC.models import BotanicalCategory
-from MVC.models import EntryGroup
-from MVC.models import EntryType
 from MVC.models import Plant
-from MVC.models import PlantFamily
-from MVC.models import PlantFamilyRequestCreate
+from MVC.models import PlantRequestCreate
 from MVC.models import Yard
 from MVC.models import YardRequestCreate
 from utils.db import session
@@ -44,90 +40,17 @@ class ControllerBeds:
 
 
 class ControllerPlants:
-    def __init__(self):
-        self._plant = Plant()
-        pass
+    _plants = list[Plant]
 
-    def getOne(self):
+    def __init__(self):
+        self._plants = self.get_all()
         pass
 
     def get_all(self) -> dict:
-        plants = self.fetch_all()
-        return plants
+        return (session.query(Plant).all())
 
-    def fetch_all(self):
-        plants = Plant()
-        return plants.fech_all()
-
-    def create(self):
-        pass
-
-    def update(self):
-        pass
-
-    def delete(self):
-        pass
-
-
-class ControllerEntryGroups:
-    _entry_group_model = EntryGroup
-
-    def __init__(self):
-        self._entry_group_model = EntryGroup()
-
-    def get_all(self) -> dict:
-        entry_groups = self.fetch_all()
-        return ({
-            'message': 'Listing all entry groups',
-            'entry_groups': entry_groups,
-        })
-
-    def fetch_all(self):
-        pass
-
-
-class ControllerEntryTypes:
-    _entry_type_model = EntryType
-
-    def __init__(self):
-        self._entry_type_model = EntryType()
-
-    def get_all(self) -> dict:
-        entry_types = self.fetch_all()
-        return entry_types
-
-    def fetch_all(self):
-        pass
-
-
-class ControllerPlantFamilies:
-    _plant_families = list[PlantFamily]
-
-    def __init__(self):
-        self._yards = self.get_all()
-
-    def create(self, plant_families_request: list[PlantFamilyRequestCreate]) -> list[PlantFamily]:
-        self._plant_families = [
-            PlantFamily.create(
-                plant_family,
-            ) for plant_family in plant_families_request
-        ]
-        session.add_all(self._plant_families)
+    def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
+        self._beds = [Plant.create(bed) for bed in request]
+        session.add_all(self._beds)
         session.commit
-        return self._plant_families
-
-    def get_all(self) -> list[PlantFamily]:
-        return (session.query(PlantFamily).all())
-
-
-class ControllerBotanicalCategories:
-    _botanical_category_model = BotanicalCategory
-
-    def __init__(self):
-        self._botanical_category_model = BotanicalCategory()
-
-    def get_all(self) -> dict:
-        pass
-
-    def createModels(self, query):
-        pass
+        return self._beds

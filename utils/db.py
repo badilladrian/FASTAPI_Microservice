@@ -2,6 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 engine = create_engine(
-    'postgresql://farmly_user:farmly_password@localhost:5432/farmly',
+    'postgresql://root:this-is-a-very-strong-passsword@localhost:5432/test',
 )
-session = Session(engine)
+session = Session(engine, autoflush=True)
