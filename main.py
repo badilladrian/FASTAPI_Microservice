@@ -78,15 +78,6 @@ def get_all_plant_families():
     })
 
 
-@app.get('/botanical_category')
-def get_all_botanical_categories():
-    botanical_categories = botanical_categories_controller.get_all()
-    return ({
-        'message': 'Listing all botanical categories',
-        'entry_types': botanical_categories,
-    })
-
-
 @app.post('/yard')
 def create_yard(yard_request: List[YardRequestCreate]):
     message = 'Yards couldn´t be created'
