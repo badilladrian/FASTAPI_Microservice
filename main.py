@@ -75,12 +75,15 @@ def create_bed(request: list[BedRequestCreate]):
 # Plant endpoints
 # GET
 @app.get('/plant')
-def get_all_plants():
-    plants = plants_controller.get_all()
-    return {
-        'message': 'Listing all plants',
+async def get_plants(id: Optional[List[int]] = Query(None)):
+    message = 'Plants not found'
+    plants = plants_controller.get(id)
+    if (plants or len(plants) > 0):
+        message = 'Listing plants'
+    return ({
+        'message': message,
         'plants': plants,
-    }
+    })
 
 
 # POST
