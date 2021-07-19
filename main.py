@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI
 
 from MVC.controllers import ControllerBeds
@@ -24,10 +26,15 @@ async def root():
 
 
 @app.get('/yard')
-def get_all_yards():
-    yards = yards_controller.get_all()
+async def get_yards(id: Optional[int] = None):
+    if(id):
+        message = 'Listing one yard'
+        yards = yards_controller.get(id)
+    else:
+        message = 'Listing all yards'
+        yards = yards_controller.get_all()
     return ({
-        'message': 'Listing all yards',
+        'message': message,
         'yards': yards,
     })
 
