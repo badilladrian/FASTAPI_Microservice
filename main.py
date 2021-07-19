@@ -1,4 +1,8 @@
+from typing import List
+from typing import Optional
+
 from fastapi import FastAPI
+from fastapi import Query
 
 from MVC.controllers import ControllerBeds
 from MVC.controllers import ControllerPlants
@@ -46,10 +50,13 @@ def create_yard(request: list[YardRequestCreate]):
 # Bed endpoints
 # GET
 @app.get('/bed')
-def get_all_beds():
-    beds = beds_controller.get_all()
+async def get_beds(bed: Optional[List[int]] = Query(None)):
+    message = 'Beds not found'
+    beds = beds_controller.get(bed)
+    if (beds or len(beds) > 0):
+        message = 'Listing beds'
     return ({
-        'message': 'Listing all beds',
+        'message': message,
         'beds': beds,
     })
 
