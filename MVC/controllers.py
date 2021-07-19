@@ -1,3 +1,6 @@
+from typing import List
+from typing import Optional
+
 from MVC.models import Bed
 from MVC.models import BedRequestCreate
 from MVC.models import Plant
@@ -8,16 +11,21 @@ from utils.db import session
 
 
 class ControllerYards:
-    _yards = list[Yard]
+    _yards: List[Yard] = []
 
     def __init__(self):
-        self._yards = self.get_all()
+        self._yards = self.get()
 
-    def get_all(self):
-        return (session.query(Yard).all())
-
-    def get(self, id: int) -> Yard:
-        return (session.query(Yard).all())
+    def get(self, request: Optional[List[int]] = None) -> List[Yard]:
+        self._yards = []
+        if (request):
+            for _ in request:
+                yard = session.query(Yard).get(_)
+                if (yard):
+                    self._yards.append(yard)
+        else:
+            self._yards = (session.query(Yard).all())
+        return self._yards
 
     def create(self, request: list[YardRequestCreate]) -> list[Yard]:
         self._yards = [Yard.create(yard) for yard in request]
