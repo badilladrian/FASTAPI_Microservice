@@ -16,6 +16,9 @@ class ControllerYards:
     def get_all(self):
         return (session.query(Yard).all())
 
+    def get(self, id: int) -> Yard:
+        return (session.query(Yard).all())
+
     def create(self, request: list[YardRequestCreate]) -> list[Yard]:
         self._yards = [Yard.create(yard) for yard in request]
         session.add_all(self._yards)
