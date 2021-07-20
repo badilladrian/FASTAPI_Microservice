@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
-from sqlalchemy import Column
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from utils.db import engine
+
 Base = declarative_base()
 
 
