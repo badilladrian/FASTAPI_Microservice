@@ -1,12 +1,7 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
-from MVC.models import Bed
-from MVC.models import BedRequestCreate
-from MVC.models import Plant
-from MVC.models import PlantRequestCreate
-from MVC.models import Yard
-from MVC.models import YardRequestCreate
+from MVC.models import Bed, BedRequestCreate, Plant, PlantRequestCreate, Yard, YardRequestCreate
+
 from utils.db import session
 
 
