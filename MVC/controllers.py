@@ -64,6 +64,7 @@ class ControllerPlants:
     def __init__(self) -> None:
         self._plants = self.get()
 
+    # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Plant]:
         self._plants = []
         if (request):
