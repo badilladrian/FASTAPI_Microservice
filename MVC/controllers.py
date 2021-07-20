@@ -16,6 +16,7 @@ class ControllerYards:
     def __init__(self):
         self._yards = self.get()
 
+    # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Yard]:
         self._yards = []
         if (request):
@@ -40,6 +41,7 @@ class ControllerBeds:
     def __init__(self) -> None:
         self._beds = self.get()
 
+    # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Bed]:
         self._beds = []
         if (request):
