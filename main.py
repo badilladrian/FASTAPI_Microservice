@@ -1,15 +1,9 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
-from fastapi import FastAPI
-from fastapi import Query
+from fastapi import FastAPI, Query
 
-from MVC.controllers import ControllerBeds
-from MVC.controllers import ControllerPlants
-from MVC.controllers import ControllerYards
-from MVC.models import BedRequestCreate
-from MVC.models import PlantRequestCreate
-from MVC.models import YardRequestCreate
+from MVC.controllers import ControllerBeds, ControllerPlants, ControllerYards
+from MVC.models import BedRequestCreate, PlantRequestCreate, YardRequestCreate
 
 yards_controller = ControllerYards()
 beds_controller = ControllerBeds()
