@@ -49,15 +49,27 @@ def create_yard(request: list[YardRequestCreate]):
 
 # Bed endpoints
 # GET
-@app.get('/bed')
-async def get_beds(bed: Optional[List[int]] = Query(None)):
+@app.get('/beds')
+async def get_beds(id: Optional[List[int]] = Query(None)):
     message = 'Beds not found'
-    beds = beds_controller.get(bed)
-    if (beds or len(beds) > 0):
+    beds = beds_controller.get_multi(id)
+    if (len(beds) > 0):
         message = 'Listing beds'
     return ({
         'message': message,
         'beds': beds,
+    })
+
+
+@app.get('/bed')
+async def get_bed(id: int = Query(None)):
+    message = 'Beds not found'
+    bed = beds_controller.get_one(id)
+    if (bed):
+        message = 'Bed found'
+    return ({
+        'message': message,
+        'bed': bed,
     })
 
 
