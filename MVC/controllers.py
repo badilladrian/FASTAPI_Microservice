@@ -41,19 +41,25 @@ class ControllerBeds:
     _beds: List[Bed] = []
 
     def __init__(self) -> None:
-        self._beds = self.get()
+        self._beds = self.get_all()
 
     # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Bed]:
         self._beds = []
         if (request):
-            for _ in request:
-                bed = session.query(Bed).get(_)
+            for id in request:
+                bed = self.get_one(id)
                 if (bed):
                     self._beds.append(bed)
         else:
-            self._beds = (session.query(Bed).all())
-        return self._beds
+            beds = self.get_all()
+        return beds
+
+    def get_all(self) -> List[Bed]:
+        return session.query(Bed).all()
+
+    def get_one(self, id: int) -> Bed:
+        return session.query(Bed).get(id)
 
     def create(self, request: list[BedRequestCreate]) -> list[Bed]:
         self._beds = [Bed.create(bed) for bed in request]
@@ -66,25 +72,20 @@ class ControllerPlants:
     _plants: List[Plant] = []
 
     def __init__(self) -> None:
-        self._plants = self.get_all()
+        self._plants = self.get()
 
-    # this method allows get one, multi and all
-    def get_multi(self, request: Optional[List[int]] = None) -> List[Plant]:
-        plants = []
+    # this method allows get one, get multi and get all
+    def get(self, request: Optional[List[int]] = None) -> List[Plant]:
+        self._plants = []
         if (request):
-            for id in request:
-                plant = self.get_one(id)
+            for _ in request:
+                plant = session.query(Plant).get(_)
                 if (plant):
-                    plants.append(plant)
+                    self._plants.append(plant)
         else:
-            plants = self.get_all()
-        return plants
+            self._plants = (session.query(Plant).all())
+        return self._plants
 
-    def get_one(self, id) -> Plant:
-        return session.query(Plant).get(id)
-
-    def get_all(self) -> List[Plant]:
-        return session.query(Plant).all()
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         self._beds = [Plant.create(bed) for bed in request]
