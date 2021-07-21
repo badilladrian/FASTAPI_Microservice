@@ -73,6 +73,15 @@ class ControllerBeds:
         session.commit
         return self._beds
 
+    def delete(self, id) -> bool:
+        result = False
+        bed = self.get_one(id)
+        if bed:
+            session.delete(bed)
+            session.commit
+            result = True
+        return result
+
 
 class ControllerPlants:
     _plants: List[Plant] = []
