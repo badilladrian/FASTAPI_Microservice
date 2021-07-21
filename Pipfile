@@ -7,11 +7,18 @@ name = "pypi"
 fastapi = {extras = ["all"], version = "*"}
 uvicorn = "*"
 typing = "*"
-pre-commit = "*"
-psycopg2 = "*"
 python-dotenv = "*"
+pydantic = "*"
+sqlalchemy = "*"
 
 [dev-packages]
+fastapi = {extras = ["all"], version = "*"}
+uvicorn = "*"
+typing = "*"
+python-dotenv = "*"
+pydantic = "*"
+pre-commit = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.9"

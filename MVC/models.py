@@ -1,77 +1,84 @@
-import json
-from typing import List
+from __future__ import annotations
+
+from pydantic import BaseModel
+
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
+from utils.db import engine
+
+Base = declarative_base()
 
 
-class Plant():
-    _id: int
+class YardRequestCreate(BaseModel):
+    name: str
 
 
-    def __init__(self,id:int):
-        self._id = id
+class Yard(Base):
+    __tablename__ = 'yards'
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String)
+    beds = relationship('Bed')
 
-
-    def fech_all():
-        data_file  = open('./utils/data.json',)
-        plants = json.loads(data_file.read())["plants"]
-        return plants
-
-
-    def update(self, plant):
-        if plant.id:
-            self._id = plant.id
-
-
-class Bed():
-    _id: int
-    _plants: List[Plant]
-
-
-    def __init__(self,id:int, plants:List[Plant]=[]):
-        self._id = id
-        self._plants = plants
-
-
-    def fech_all():
-        data_file  = open('./utils/data.json',)
-        beds = json.loads(data_file.read())["beds"]
-        return beds
-
-
-    def update(self, bed):
-        if bed.id:
-            self._id = bed.id
-        if bed.plants:
-            self._plants = bed.plants
-
-
-class Yard():
-    _id: int
-    _name: str
-    _location: str
-    _beds: List[Bed]
-
-
-    def __init__(self,id:int, name:str, location:str, beds:List[Bed]=[]):
-        self._id = id
-        self._name = name
-        self._location = location
-        self._beds = beds 
-
-
-    def fech_all():
-        data_file  = open('./utils/data.json',)
-        yards = json.loads(data_file.read())["yards"]
-        return yards
-
+    def __init__(self, name) -> None:
+        self.name = name
 
     def update(self, yard):
         if yard.id:
-            self._id = yard.id
+            self.id = yard.id
         if yard.name:
-            self._name = yard.name
-        if yard.location:
-            self._location = yard.location
-        if yard.beds:
-            self._beds = yard.beds
+            self.name = yard.name
+
+    @staticmethod
+    def create(request: YardRequestCreate) -> Yard:
+        return Yard(
+            name=request.name,
+        )
+
+    def __repr__(self):
+        return {'id': self.id, 'name': self.name, 'beds': self.beds}
 
 
+class BedRequestCreate(BaseModel):
+    yard: int
+
+
+class Bed(Base):
+    __tablename__ = 'beds'
+    id = Column('id', Integer, primary_key=True)
+    yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
+    plants = relationship('Plant')
+
+    def __init__(self, yard) -> None:
+        self.yard_id = yard
+
+    @staticmethod
+    def create(request: BedRequestCreate) -> Bed:
+        return Bed(request.yard)
+
+    def __repr__(self):
+        return {'id': self.id, 'yard': self.yard_id, 'plants': self.plants}
+
+
+class PlantRequestCreate(BaseModel):
+    bed_id: int
+
+
+class Plant(Base):
+    __tablename__ = 'plants'
+    _id = Column('id', Integer, primary_key=True)
+    _bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
+
+    def __init__(self, bed_id) -> None:
+        self._bed_id = bed_id
+
+    @staticmethod
+    def create(request: PlantRequestCreate) -> Plant:
+        return Plant(request.bed_id)
+
+    def __repr__(self):
+        return {'id': self._id, 'bed_id': self._bed_id}
+
+
+Base.metadata.create_all(engine)
