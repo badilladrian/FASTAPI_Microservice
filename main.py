@@ -47,6 +47,17 @@ def create_yard(request: list[YardRequestCreate]):
     })
 
 
+# DELETE
+@app.delete('/yard')
+def delete_yard(id: int):
+    message = 'Yard does not exist'
+    if yards_controller.delete(id):
+        message = 'Yard successfully deleted'
+    return ({
+        'message': message,
+    })
+
+
 # Bed endpoints
 # GET
 @app.get('/beds')
