@@ -106,3 +106,12 @@ class ControllerPlants:
         session.add_all(self._beds)
         session.commit
         return self._beds
+
+    def delete(self, id) -> bool:
+        result = False
+        plant = self.get_one(id)
+        if plant:
+            session.delete(plant)
+            session.commit
+            result = True
+        return result
