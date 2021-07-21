@@ -127,3 +127,14 @@ def create_plant(request: list[PlantRequestCreate]):
     return ({
         'message': message,
     })
+
+
+# DELETE
+@app.delete('/plant')
+def delete_plant(id: int):
+    message = 'Plant does not exist'
+    if plants_controller.delete(id):
+        message = 'Plant successfully deleted'
+    return ({
+        'message': message,
+    })
