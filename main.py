@@ -1,6 +1,8 @@
-from typing import Optional,List
+from typing import List
+from typing import Optional
 
-from fastapi import FastAPI,Query
+from fastapi import FastAPI
+from fastapi import Query
 
 from MVC.controllers import ControllerBeds
 from MVC.controllers import ControllerPlants
@@ -23,15 +25,31 @@ async def root():
 
 # Yard endpoints
 # GET
-@app.get('/yard')
-async def get_yards(yards: Optional[List[int]] = Query(None)):
+
+
+@app.get('/yards')
+async def get_yards(id: Optional[List[int]] = Query(None)):
     message = 'Yards not found'
-    yards = yards_controller.get(yards)
-    if (yards or len(yards) > 0):
+    yards = yards_controller.get_multi(id)
+    if (len(yards) > 0):
         message = 'Listing yards'
     return ({
         'message': message,
         'yards': yards,
+    })
+
+# GET
+
+
+@app.get('/yard')
+async def get_yard(id: int):
+    message = 'Yard not found'
+    yard = yards_controller.get_one(id)
+    if (yard):
+        message = 'Yard found'
+    return ({
+        'message': message,
+        'yard': yard,
     })
 
 
