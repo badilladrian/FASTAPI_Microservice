@@ -1,12 +1,14 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
-from MVC.models import Bed
-from MVC.models import BedRequestCreate
-from MVC.models import Plant
-from MVC.models import PlantRequestCreate
-from MVC.models import Yard
-from MVC.models import YardRequestCreate
+from MVC.models import (
+    Bed,
+    BedRequestCreate,
+    Plant,
+    PlantRequestCreate,
+    Yard,
+    YardRequestCreate,
+)
+
 from utils.db import session
 
 
@@ -16,6 +18,7 @@ class ControllerYards:
     def __init__(self):
         self._yards = self.get()
 
+    # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Yard]:
         self._yards = []
         if (request):
@@ -41,8 +44,8 @@ class ControllerBeds:
         self._beds = self.get_all()
 
     # this method allows get one, get multi and get all
-    def get_multi(self, request: Optional[List[int]] = None) -> List[Bed]:
-        beds: List[Bed] = []
+    def get(self, request: Optional[List[int]] = None) -> List[Bed]:
+        self._beds = []
         if (request):
             for id in request:
                 bed = self.get_one(id)
@@ -82,6 +85,7 @@ class ControllerPlants:
         else:
             self._plants = (session.query(Plant).all())
         return self._plants
+
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         self._beds = [Plant.create(bed) for bed in request]

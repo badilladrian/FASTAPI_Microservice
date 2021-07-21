@@ -1,15 +1,9 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
-from fastapi import FastAPI
-from fastapi import Query
+from fastapi import FastAPI, Query
 
-from MVC.controllers import ControllerBeds
-from MVC.controllers import ControllerPlants
-from MVC.controllers import ControllerYards
-from MVC.models import BedRequestCreate
-from MVC.models import PlantRequestCreate
-from MVC.models import YardRequestCreate
+from MVC.controllers import ControllerBeds, ControllerPlants, ControllerYards
+from MVC.models import BedRequestCreate, PlantRequestCreate, YardRequestCreate
 
 yards_controller = ControllerYards()
 beds_controller = ControllerBeds()
@@ -86,16 +80,34 @@ def create_bed(request: list[BedRequestCreate]):
 
 # Plant endpoints
 # GET
-@app.get('/plant')
-def get_all_plants():
-    plants = plants_controller.get_all()
-    return {
-        'message': 'Listing all plants',
+@app.get('/plants')
+async def get_plants(ids: Optional[List[int]] = Query(None)):
+    message = 'Plants not found'
+    plants = plants_controller.get_multi(ids)
+    if (plants or len(plants) > 0):
+        message = 'Listing plants'
+    return ({
+        'message': message,
         'plants': plants,
-    }
+    })
 
+# GET
+
+
+@app.get('/plant/{id}')
+async def get_plant(id: int):
+    message = 'Plant not found'
+    plant = plants_controller.get_one(id)
+    if (plant):
+        message = 'Plant found'
+    return ({
+        'message': message,
+        'plants': plant,
+    })
 
 # POST
+
+
 @app.post('/plant')
 def create_plant(request: list[PlantRequestCreate]):
     message = 'Plants couldn´t be created'
