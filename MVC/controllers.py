@@ -38,19 +38,25 @@ class ControllerBeds:
     _beds: List[Bed] = []
 
     def __init__(self) -> None:
-        self._beds = self.get()
+        self._beds = self.get_all()
 
     # this method allows get one, get multi and get all
-    def get(self, request: Optional[List[int]] = None) -> List[Bed]:
-        self._beds = []
+    def get_multi(self, request: Optional[List[int]] = None) -> List[Bed]:
+        beds: List[Bed] = []
         if (request):
-            for _ in request:
-                bed = session.query(Bed).get(_)
+            for id in request:
+                bed = self.get_one(id)
                 if (bed):
                     self._beds.append(bed)
         else:
-            self._beds = (session.query(Bed).all())
-        return self._beds
+            beds = self.get_all()
+        return beds
+
+    def get_all(self) -> List[Bed]:
+        return session.query(Bed).all()
+
+    def get_one(self, id: int) -> Bed:
+        return session.query(Bed).get(id)
 
     def create(self, request: list[BedRequestCreate]) -> list[Bed]:
         self._beds = [Bed.create(bed) for bed in request]
