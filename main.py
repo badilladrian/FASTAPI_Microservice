@@ -94,6 +94,18 @@ def create_bed(request: list[BedRequestCreate]):
         'message': message,
     })
 
+# DELETE
+
+
+@app.delete('/bed')
+def delete_bed(id: int):
+    message = 'Bed does not exist'
+    if beds_controller.delete(id):
+        message = 'Bed successfully deleted'
+    return ({
+        'message': message,
+    })
+
 
 # Plant endpoints
 # GET
