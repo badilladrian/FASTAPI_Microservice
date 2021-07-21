@@ -1,6 +1,13 @@
 from typing import List, Optional
 
-from MVC.models import Bed, BedRequestCreate, Plant, PlantRequestCreate, Yard, YardRequestCreate
+from MVC.models import (
+    Bed,
+    BedRequestCreate,
+    Plant,
+    PlantRequestCreate,
+    Yard,
+    YardRequestCreate,
+)
 
 from utils.db import session
 
@@ -59,19 +66,25 @@ class ControllerPlants:
     _plants: List[Plant] = []
 
     def __init__(self) -> None:
-        self._plants = self.get()
+        self._plants = self.get_all()
 
-    # this method allows get one, get multi and get all
-    def get(self, request: Optional[List[int]] = None) -> List[Plant]:
-        self._plants = []
+    # this method allows get one, multi and all
+    def get_multi(self, request: Optional[List[int]] = None) -> List[Plant]:
+        plants = []
         if (request):
-            for _ in request:
-                plant = session.query(Plant).get(_)
+            for id in request:
+                plant = self.get_one(id)
                 if (plant):
-                    self._plants.append(plant)
+                    plants.append(plant)
         else:
-            self._plants = (session.query(Plant).all())
-        return self._plants
+            plants = self.get_all()
+        return plants
+
+    def get_one(self, id) -> Plant:
+        return session.query(Plant).get(id)
+
+    def get_all(self) -> List[Plant]:
+        return session.query(Plant).all()
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         self._beds = [Plant.create(bed) for bed in request]
