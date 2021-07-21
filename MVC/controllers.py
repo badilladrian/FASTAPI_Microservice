@@ -33,6 +33,15 @@ class ControllerYards:
         session.commit
         return self._yards
 
+    def delete(self, id) -> bool:
+        result = False
+        yard = self.get_one(id)
+        if yard:
+            session.delete(yard)
+            session.commit
+            result = True
+        return result
+
 
 class ControllerBeds:
     _beds: List[Bed] = []
