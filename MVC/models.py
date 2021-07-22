@@ -14,9 +14,8 @@ Base = declarative_base()
 
 
 class YardRequestUpdate(BaseModel):
-    id: int
-    name: str | None
-    new_id: int | None
+    id: Optional[int]
+    name: Optional[str]
 
 
 class YardRequestCreate(BaseModel):
@@ -48,8 +47,7 @@ class Yard(Base):
 
 class BedRequestUpdate(BaseModel):
     id: int
-    yard_id: int | None
-    new_id: int | None
+    yard_id: Optional[int]
 
 
 class BedRequestCreate(BaseModel):
@@ -100,6 +98,7 @@ class Plant(Base):
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name, 'bed_id': self._bed_id}
+
 
 
 Base.metadata.create_all(engine)
