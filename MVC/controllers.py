@@ -1,3 +1,4 @@
+
 from typing import List, Optional
 
 from MVC.models import (
@@ -18,18 +19,23 @@ class ControllerYards:
     def __init__(self):
         self._yards = self.get()
 
-    # this method allows get one, get multi and get all
-    def get(self, request: Optional[List[int]] = None) -> List[Yard]:
-        self._yards = []
+    def get_multi(self, request: Optional[List[int]] = None) -> List[Yard]:
+        yards: List[Yard] = []
         if (request):
-            for _ in request:
-                yard = session.query(Yard).get(_)
+            for id in request:
+                yard = self.get_one(id)
                 if (yard):
-                    self._yards.append(yard)
+                    yards.append(yard)
         else:
-            self._yards = (session.query(Yard).all())
-        return self._yards
+            yards = self.get_all()
+        return yards
 
+    def get_all(self) -> List[Yard]:
+        return session.query(Yard).all()
+
+    def get_one(self, id) -> Yard:
+        return session.query(Yard).get(id)
+      
     def create(self, request: list[YardRequestCreate]) -> list[Yard]:
         self._yards = [Yard.create(yard) for yard in request]
         session.add_all(self._yards)

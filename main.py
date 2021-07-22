@@ -1,3 +1,4 @@
+
 from typing import List, Optional
 
 from fastapi import FastAPI, Query
@@ -21,12 +22,29 @@ async def root():
 # GET
 
 
-@app.get('/yard')
-def get_all_yards():
-    yards = yards_controller.get_all()
+@app.get('/yards')
+async def get_yards(id: Optional[List[int]] = Query(None)):
+    message = 'Yards not found'
+    yards = yards_controller.get_multi(id)
+    if (len(yards) > 0):
+        message = 'Listing yards'
     return ({
-        'message': 'Listing all yards',
+        'message': message,
         'yards': yards,
+    })
+
+# GET
+
+
+@app.get('/yard')
+async def get_yard(id: int):
+    message = 'Yard not found'
+    yard = yards_controller.get_one(id)
+    if (yard):
+        message = 'Yard found'
+    return ({
+        'message': message,
+        'yard': yard,
     })
 
 
