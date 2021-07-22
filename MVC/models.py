@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
-from sqlalchemy import Column
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
+
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from utils.db import engine
+
 Base = declarative_base()
 
 
@@ -55,7 +54,7 @@ class Bed(Base):
         self.yard_id = yard
 
     @staticmethod
-    def create(request: BedRequestCreate) -> Plant:
+    def create(request: BedRequestCreate) -> Bed:
         return Bed(request.yard)
 
     def __repr__(self):
@@ -63,24 +62,23 @@ class Bed(Base):
 
 
 class PlantRequestCreate(BaseModel):
-    bed: int
+    bed_id: int
 
 
 class Plant(Base):
     __tablename__ = 'plants'
-    id = Column('id', Integer, primary_key=True)
-    bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
+    _id = Column('id', Integer, primary_key=True)
+    _bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
 
-    def __init__(self, bed) -> None:
-        self.bed_id = bed
-        pass
+    def __init__(self, bed_id) -> None:
+        self._bed_id = bed_id
 
     @staticmethod
     def create(request: PlantRequestCreate) -> Plant:
-        return Plant(request.bed)
+        return Plant(request.bed_id)
 
     def __repr__(self):
-        return {'id': self.id, 'bed': self.bed_id}
+        return {'id': self._id, 'bed_id': self._bed_id}
 
 
 Base.metadata.create_all(engine)
