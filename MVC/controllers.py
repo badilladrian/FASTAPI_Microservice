@@ -99,7 +99,7 @@ class ControllerPlants:
         self._plants = self.get_all()
 
     # this method allows get one, get multi and get all
-    def get(self, request: Optional[List[int]] = None) -> List[Plant]:
+    def get_multi(self, request: Optional[List[int]] = None) -> List[Plant]:
         plants: List[Plant] = []
         if (request):
             for id in request:
