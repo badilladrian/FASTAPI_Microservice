@@ -15,7 +15,7 @@ from utils.db import session
 class ControllerYards:
     _yards: List[Yard] = []
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._yards = self.get_all()
 
     # this method allows get one, get multi and get all
