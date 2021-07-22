@@ -41,6 +41,17 @@ def create_yard(request: list[YardRequestCreate]):
     })
 
 
+# DELETE
+@app.delete('/yard')
+def delete_yard(id: int):
+    message = 'Yard does not exist'
+    if yards_controller.delete(id):
+        message = 'Yard successfully deleted'
+    return ({
+        'message': message,
+    })
+
+
 # Bed endpoints
 # GET
 @app.get('/beds')
@@ -73,6 +84,18 @@ def create_bed(request: list[BedRequestCreate]):
     message = 'Beds couldn´t be created'
     if beds_controller.create(request=request):
         message = 'Beds created successfully'
+    return ({
+        'message': message,
+    })
+
+# DELETE
+
+
+@app.delete('/bed')
+def delete_bed(id: int):
+    message = 'Bed does not exist'
+    if beds_controller.delete(id):
+        message = 'Bed successfully deleted'
     return ({
         'message': message,
     })
@@ -113,6 +136,17 @@ def create_plant(request: list[PlantRequestCreate]):
     message = 'Plants couldn´t be created'
     if plants_controller.create(request=request):
         message = 'Plants created successfully'
+    return ({
+        'message': message,
+    })
+
+
+# DELETE
+@app.delete('/plant')
+def delete_plant(id: int):
+    message = 'Plant does not exist'
+    if plants_controller.delete(id):
+        message = 'Plant successfully deleted'
     return ({
         'message': message,
     })

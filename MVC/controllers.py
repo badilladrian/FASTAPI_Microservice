@@ -36,6 +36,15 @@ class ControllerYards:
         session.commit
         return self._yards
 
+    def delete(self, id) -> bool:
+        result = False
+        yard = self.get_one(id)
+        if yard:
+            session.delete(yard)
+            session.commit
+            result = True
+        return result
+
 
 class ControllerBeds:
     _beds: List[Bed] = []
@@ -67,6 +76,15 @@ class ControllerBeds:
         session.commit
         return self._beds
 
+    def delete(self, id) -> bool:
+        result = False
+        bed = self.get_one(id)
+        if bed:
+            session.delete(bed)
+            session.commit
+            result = True
+        return result
+
 
 class ControllerPlants:
     _plants: List[Plant] = []
@@ -92,3 +110,12 @@ class ControllerPlants:
         session.add_all(self._beds)
         session.commit
         return self._beds
+
+    def delete(self, id) -> bool:
+        result = False
+        plant = self.get_one(id)
+        if plant:
+            session.delete(plant)
+            session.commit
+            result = True
+        return result
