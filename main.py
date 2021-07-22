@@ -2,8 +2,17 @@ from typing import List, Optional
 
 from fastapi import FastAPI, Query
 
-from MVC.controllers import ControllerBeds, ControllerPlants, ControllerYards
-from MVC.models import BedRequestCreate, PlantRequestCreate, YardRequestCreate
+from MVC.controllers import (
+    ControllerBeds,
+    ControllerPlants,
+    ControllerYards,
+)
+from MVC.models import (
+    BedRequestCreate,
+    PlantRequestCreate,
+    YardRequestCreate,
+    YardRequestUpdate,
+)
 
 yards_controller = ControllerYards()
 beds_controller = ControllerBeds()
@@ -62,6 +71,17 @@ def delete_yard(id: int):
     message = 'Yard does not exist'
     if yards_controller.delete(id):
         message = 'Yard successfully deleted'
+    return ({
+        'message': message,
+    })
+
+
+# UPDATE
+@app.put('/yards')
+def update_yard(yards: List[YardRequestUpdate]):
+    message = 'Yards not found'
+    if yards_controller.update_multi(yards):
+        message = 'Yard successfully updated'
     return ({
         'message': message,
     })
