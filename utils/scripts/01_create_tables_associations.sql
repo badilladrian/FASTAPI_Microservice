@@ -129,12 +129,14 @@ CREATE SEQUENCE IF NOT EXISTS public.plants_id_seq
 -- TABLE: public.plants
 CREATE TABLE IF NOT EXISTS public.plants (
     id integer NOT NULL DEFAULT nextval('plants_id_seq'::regclass),
-    plant text COLLATE pg_catalog."default" NOT NULL,
-    plant_family_id integer,
-    botanical_category_id integer,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    bed_id integer,
+    -- plant_family_id integer,
+    -- botanical_category_id integer,
     CONSTRAINT plants_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_botanical_category_id FOREIGN KEY (botanical_category_id) REFERENCES public.botanical_categories (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT fk_plant_family_id FOREIGN KEY (plant_family_id) REFERENCES public.plant_families (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION);
+    -- CONSTRAINT fk_botanical_category_id FOREIGN KEY (botanical_category_id) REFERENCES public.botanical_categories (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT fk_bed_id FOREIGN KEY (bed_id) REFERENCES public.beds (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION);
+    -- CONSTRAINT fk_plant_family_id FOREIGN KEY (plant_family_id) REFERENCES public.plant_families (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 
 -- SEQUENCE: public.cultivars_id_seq
