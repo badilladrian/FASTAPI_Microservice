@@ -96,19 +96,25 @@ class ControllerPlants:
     _plants: List[Plant] = []
 
     def __init__(self) -> None:
-        self._plants = self.get()
+        self._plants = self.get_all()
 
     # this method allows get one, get multi and get all
     def get(self, request: Optional[List[int]] = None) -> List[Plant]:
-        self._plants = []
+        plants: List[Plant] = []
         if (request):
-            for _ in request:
-                plant = session.query(Plant).get(_)
+            for id in request:
+                plant = self.get_one(id)
                 if (plant):
-                    self._plants.append(plant)
+                    plants.append(plant)
         else:
-            self._plants = (session.query(Plant).all())
-        return self._plants
+            plants = self.get_all()
+        return plants
+
+    def get_all(self) -> List[Plant]:
+        return session.query(Plant).all()
+
+    def get_one(self, id: int) -> Plant:
+        return session.query(Plant).get(id)
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         self._beds = [Plant.create(bed) for bed in request]
