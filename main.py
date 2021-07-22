@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 
 from fastapi import FastAPI, Query
@@ -18,10 +17,9 @@ async def root():
         'message': 'This is the best farmer assistence app ever!',
     }
 
+
 # Yard endpoints
 # GET
-
-
 @app.get('/yards')
 async def get_yards(id: Optional[List[int]] = Query(None)):
     message = 'Yards not found'
@@ -33,9 +31,8 @@ async def get_yards(id: Optional[List[int]] = Query(None)):
         'yards': yards,
     })
 
+
 # GET
-
-
 @app.get('/yard')
 async def get_yard(id: int):
     message = 'Yard not found'
@@ -84,6 +81,7 @@ async def get_beds(id: Optional[List[int]] = Query(None)):
     })
 
 
+# GET
 @app.get('/bed')
 async def get_bed(id: int = Query(None)):
     message = 'Beds not found'
@@ -106,9 +104,8 @@ def create_bed(request: list[BedRequestCreate]):
         'message': message,
     })
 
+
 # DELETE
-
-
 @app.delete('/bed')
 def delete_bed(id: int):
     message = 'Bed does not exist'
@@ -132,9 +129,8 @@ async def get_plants(ids: Optional[List[int]] = Query(None)):
         'plants': plants,
     })
 
+
 # GET
-
-
 @app.get('/plant/{id}')
 async def get_plant(id: int):
     message = 'Plant not found'
@@ -146,9 +142,8 @@ async def get_plant(id: int):
         'plants': plant,
     })
 
+
 # POST
-
-
 @app.post('/plant')
 def create_plant(request: list[PlantRequestCreate]):
     message = 'Plants couldn´t be created'
