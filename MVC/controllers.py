@@ -18,6 +18,7 @@ class ControllerYards:
     def __init__(self):
         self._yards = self.get_all()
 
+    # this method allows get one, get multi and get all
     def get_multi(self, request: Optional[List[int]] = None) -> List[Yard]:
         yards: List[Yard] = []
         if (request):
