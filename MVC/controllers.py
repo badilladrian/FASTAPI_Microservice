@@ -1,4 +1,3 @@
-
 from typing import List, Optional
 
 from MVC.models import (
@@ -17,7 +16,7 @@ class ControllerYards:
     _yards: List[Yard] = []
 
     def __init__(self):
-        self._yards = self.get()
+        self._yards = self.get_all()
 
     def get_multi(self, request: Optional[List[int]] = None) -> List[Yard]:
         yards: List[Yard] = []
@@ -35,7 +34,7 @@ class ControllerYards:
 
     def get_one(self, id) -> Yard:
         return session.query(Yard).get(id)
-      
+
     def create(self, request: list[YardRequestCreate]) -> list[Yard]:
         self._yards = [Yard.create(yard) for yard in request]
         session.add_all(self._yards)
@@ -109,7 +108,6 @@ class ControllerPlants:
         else:
             self._plants = (session.query(Plant).all())
         return self._plants
-
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         self._beds = [Plant.create(bed) for bed in request]
