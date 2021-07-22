@@ -3,6 +3,7 @@ from typing import List, Optional
 from MVC.models import (
     Bed,
     BedRequestCreate,
+    BedRequestUpdate,
     Plant,
     PlantRequestCreate,
     Yard,
@@ -102,6 +103,18 @@ class ControllerBeds:
             session.delete(bed)
             session.commit
             result = True
+        return result
+
+    # this method allows update one, update multi and update all
+    def update_multi(self, request: List[BedRequestUpdate]) -> bool:
+        result = False
+        if (request):
+            for _ in request:
+                bed = self.get_one(_.id)
+                if (bed):
+                    bed.update(_)
+                    session.commit()
+                    result = True
         return result
 
 
