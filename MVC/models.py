@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -15,8 +15,8 @@ Base = declarative_base()
 
 class YardRequestUpdate(BaseModel):
     id: int
-    name: Optional[str]
-    new_id: Optional[int]
+    name: str | None
+    new_id: int | None
 
 
 class YardRequestCreate(BaseModel):
@@ -46,25 +46,37 @@ class Yard(Base):
         return f'id {self._id} name {self._name} beds {self._beds}'
 
 
+class BedRequestUpdate(BaseModel):
+    id: int
+    yard_id: int | None
+    new_id: int | None
+
+
 class BedRequestCreate(BaseModel):
-    yard: int
+    yard_id: int
 
 
 class Bed(Base):
     __tablename__ = 'beds'
-    id = Column('id', Integer, primary_key=True)
-    yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
-    plants = relationship('Plant')
+    _id = Column('id', Integer, primary_key=True)
+    _yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
+    _plants = relationship('Plant')
 
-    def __init__(self, yard) -> None:
-        self.yard_id = yard
+    def __init__(self, id: int) -> None:
+        self._yard_id = id
 
     @staticmethod
     def create(request: BedRequestCreate) -> Bed:
-        return Bed(request.yard)
+        return Bed(request.yard_id)
 
-    def __repr__(self):
-        return {'id': self.id, 'yard': self.yard_id, 'plants': self.plants}
+    def update(self, request: BedRequestUpdate) -> None:
+        if request.new_id:
+            self._id = request.new_id
+        if request.yard_id:
+            self._yard_id = request.yard_id
+
+    def __repr__(self) -> str:
+        return f'id: {self._id} yard_id: {self._yard_id} plants: {self._plants}'
 
 
 class PlantRequestCreate(BaseModel):
