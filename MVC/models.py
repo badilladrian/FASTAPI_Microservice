@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -15,7 +15,8 @@ Base = declarative_base()
 
 class YardRequestUpdate(BaseModel):
     id: int
-    name: str | None
+    name: Optional[str]
+    new_id: Optional[int]
 
 
 class YardRequestCreate(BaseModel):
@@ -36,8 +37,8 @@ class Yard(Base):
         return Yard(request.name)
 
     def update(self, request: YardRequestUpdate) -> None:
-        if request.id:
-            self._id = request.id
+        if request.new_id:
+            self._id = request.new_id
         if request.name:
             self._name = request.name
 
