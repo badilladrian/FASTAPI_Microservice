@@ -79,9 +79,9 @@ def delete_yard(id: int):
 
 # UPDATE
 @app.put('/yards')
-def update_yard(yards: List[YardRequestUpdate]):
+def update_yard(id: int, request: YardRequestUpdate):
     message = 'Yards not found'
-    if yards_controller.update_multi(yards):
+    if yards_controller.update(id, request):
         message = 'Yard successfully updated'
     return ({
         'message': message,
