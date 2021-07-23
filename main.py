@@ -78,7 +78,7 @@ def delete_yard(id: int):
 
 
 # UPDATE
-@app.put('/yards')
+@app.put('/yard')
 def update_yard(id: int, request: YardRequestUpdate):
     message = 'Yard not found'
     if yards_controller.update(id, request):
@@ -138,7 +138,7 @@ def delete_bed(id: int):
 
 
 # UPDATE
-@app.put('/beds')
+@app.put('/bed')
 def update_beds(id: int, request: BedRequestUpdate):
     message = 'Bed not found'
     if beds_controller.update(id, request):
