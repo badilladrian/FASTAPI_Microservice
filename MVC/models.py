@@ -46,7 +46,7 @@ class Yard(Base):
 
 
 class BedRequestUpdate(BaseModel):
-    id: int
+    id: Optional[int]
     yard_id: Optional[int]
 
 
@@ -68,13 +68,13 @@ class Bed(Base):
         return Bed(request.yard_id)
 
     def update(self, request: BedRequestUpdate) -> None:
-        if request.new_id:
-            self._id = request.new_id
+        if request.id:
+            self._id = request.id
         if request.yard_id:
             self._yard_id = request.yard_id
 
-    def __repr__(self) -> str:
-        return f'id: {self._id} yard_id: {self._yard_id} plants: {self._plants}'
+    def __repr__(self):
+        return {'id': self._id, 'yard_id': self._yard_id, 'plants': self._plants}
 
 
 class PlantRequestCreate(BaseModel):

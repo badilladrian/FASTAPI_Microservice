@@ -53,7 +53,6 @@ class ControllerYards:
             result = True
         return result
 
-    # this method allows update one, update multi and update all
     def update(self, id: int, request: YardRequestUpdate) -> bool:
         result = False
         yard = self.get_one(id)
@@ -103,16 +102,13 @@ class ControllerBeds:
             result = True
         return result
 
-    # this method allows update one, update multi and update all
-    def update_multi(self, request: List[BedRequestUpdate]) -> bool:
+    def update(self, id: int, request: BedRequestUpdate) -> bool:
         result = False
-        if (request):
-            for _ in request:
-                bed = self.get_one(_.id)
-                if (bed):
-                    bed.update(_)
-                    session.commit()
-                    result = True
+        bed = self.get_one(id)
+        if (bed):
+            bed.update(request)
+            session.commit()
+            result = True
         return result
 
 

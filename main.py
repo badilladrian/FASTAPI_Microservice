@@ -80,7 +80,7 @@ def delete_yard(id: int):
 # UPDATE
 @app.put('/yards')
 def update_yard(id: int, request: YardRequestUpdate):
-    message = 'Yards not found'
+    message = 'Yard not found'
     if yards_controller.update(id, request):
         message = 'Yard successfully updated'
     return ({
@@ -139,10 +139,10 @@ def delete_bed(id: int):
 
 # UPDATE
 @app.put('/beds')
-def update_beds(beds: List[BedRequestUpdate]):
-    message = 'Beds not found'
-    if beds_controller.update_multi(beds):
-        message = 'Beds successfully updated'
+def update_beds(id: int, request: BedRequestUpdate):
+    message = 'Bed not found'
+    if beds_controller.update(id, request):
+        message = 'Bed successfully updated'
     return ({
         'message': message,
     })
