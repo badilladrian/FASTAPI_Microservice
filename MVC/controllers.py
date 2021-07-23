@@ -76,7 +76,7 @@ class ControllerBeds:
             for id in request:
                 bed = self.get_one(id)
                 if (bed):
-                    self._beds.append(bed)
+                    beds.append(bed)
         else:
             beds = self.get_all()
         return beds
