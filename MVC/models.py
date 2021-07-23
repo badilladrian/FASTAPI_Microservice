@@ -77,6 +77,12 @@ class Bed(Base):
         return {'id': self._id, 'yard_id': self._yard_id, 'plants': self._plants}
 
 
+class PlantRequestUpdate(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    bed_id: Optional[int]
+
+
 class PlantRequestCreate(BaseModel):
     name: str
     bed_id: int
@@ -89,12 +95,20 @@ class Plant(Base):
     _bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
 
     def __init__(self, name, bed_id) -> None:
-        self._nane = name
+        self._name = name
         self._bed_id = bed_id
 
     @staticmethod
     def create(request: PlantRequestCreate) -> Plant:
         return Plant(request.name, request.bed_id)
+
+    def update(self, request: PlantRequestUpdate) -> None:
+        if request.id:
+            self._id = request.id
+        if request.name:
+            self._name = request.name
+        if request.name:
+            self._bed_id = request.bed_id
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name, 'bed_id': self._bed_id}

@@ -6,6 +6,7 @@ from MVC.models import (
     BedRequestUpdate,
     Plant,
     PlantRequestCreate,
+    PlantRequestUpdate,
     Yard,
     YardRequestCreate,
     YardRequestUpdate,
@@ -148,5 +149,14 @@ class ControllerPlants:
         if plant:
             session.delete(plant)
             session.commit
+            result = True
+        return result
+
+    def update(self, id: int, request: PlantRequestUpdate) -> bool:
+        result = False
+        plant = self.get_one(id)
+        if (plant):
+            plant.update(request)
+            session.commit()
             result = True
         return result

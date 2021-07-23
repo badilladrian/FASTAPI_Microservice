@@ -11,6 +11,7 @@ from MVC.models import (
     BedRequestCreate,
     BedRequestUpdate,
     PlantRequestCreate,
+    PlantRequestUpdate,
     YardRequestCreate,
     YardRequestUpdate,
 )
@@ -139,7 +140,7 @@ def delete_bed(id: int):
 
 # UPDATE
 @app.put('/bed')
-def update_beds(id: int, request: BedRequestUpdate):
+def update_bed(id: int, request: BedRequestUpdate):
     message = 'Bed not found'
     if beds_controller.update(id, request):
         message = 'Bed successfully updated'
@@ -151,10 +152,10 @@ def update_beds(id: int, request: BedRequestUpdate):
 # Plant endpoints
 # GET
 @app.get('/plants')
-async def get_plants(ids: Optional[List[int]] = Query(None)):
+async def get_plants(id: Optional[List[int]] = Query(None)):
     message = 'Plants not found'
-    plants = plants_controller.get_multi(ids)
-    if (plants or len(plants) > 0):
+    plants = plants_controller.get_multi(id)
+    if (len(plants) > 0):
         message = 'Listing plants'
     return ({
         'message': message,
@@ -163,7 +164,7 @@ async def get_plants(ids: Optional[List[int]] = Query(None)):
 
 
 # GET
-@app.get('/plant/{id}')
+@app.get('/plant')
 async def get_plant(id: int):
     message = 'Plant not found'
     plant = plants_controller.get_one(id)
@@ -192,6 +193,15 @@ def delete_plant(id: int):
     message = 'Plant does not exist'
     if plants_controller.delete(id):
         message = 'Plant successfully deleted'
+    return ({
+        'message': message,
+    })
+
+@app.put('/plant')
+def update_plant(id: int, request: PlantRequestUpdate):
+    message = 'Plant not found'
+    if plants_controller.update(id, request):
+        message = 'Plant successfully updated'
     return ({
         'message': message,
     })
