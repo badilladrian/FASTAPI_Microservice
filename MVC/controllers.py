@@ -54,15 +54,13 @@ class ControllerYards:
         return result
 
     # this method allows update one, update multi and update all
-    def update_multi(self, request: List[YardRequestUpdate]) -> bool:
+    def update(self, id: int, request: YardRequestUpdate) -> bool:
         result = False
-        if (request):
-            for _ in request:
-                yard = self.get_one(_.id)
-                if (yard):
-                    yard.update(_)
-                    session.commit()
-                    result = True
+        yard = self.get_one(id)
+        if yard:
+            yard.update(request)
+            session.commit()
+            result = True
         return result
 
 

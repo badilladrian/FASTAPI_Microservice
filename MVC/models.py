@@ -36,13 +36,13 @@ class Yard(Base):
         return Yard(request.name)
 
     def update(self, request: YardRequestUpdate) -> None:
-        if request.new_id:
-            self._id = request.new_id
+        if request.id:
+            self._id = request.id
         if request.name:
             self._name = request.name
 
     def __repr__(self):
-        return f'id {self._id} name {self._name} beds {self._beds}'
+        return {'id': self._id, 'name': self._name, 'beds': self._beds}
 
 
 class BedRequestUpdate(BaseModel):
@@ -98,7 +98,6 @@ class Plant(Base):
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name, 'bed_id': self._bed_id}
-
 
 
 Base.metadata.create_all(engine)
