@@ -9,6 +9,7 @@ from MVC.controllers import (
 )
 from MVC.models import (
     BedRequestCreate,
+    BedRequestUpdate,
     PlantRequestCreate,
     YardRequestCreate,
     YardRequestUpdate,
@@ -78,9 +79,9 @@ def delete_yard(id: int):
 
 # UPDATE
 @app.put('/yards')
-def update_yard(yards: List[YardRequestUpdate]):
+def update_yard(id: int, request: YardRequestUpdate):
     message = 'Yards not found'
-    if yards_controller.update_multi(yards):
+    if yards_controller.update(id, request):
         message = 'Yard successfully updated'
     return ({
         'message': message,
@@ -131,6 +132,17 @@ def delete_bed(id: int):
     message = 'Bed does not exist'
     if beds_controller.delete(id):
         message = 'Bed successfully deleted'
+    return ({
+        'message': message,
+    })
+
+
+# UPDATE
+@app.put('/beds')
+def update_beds(beds: List[BedRequestUpdate]):
+    message = 'Beds not found'
+    if beds_controller.update_multi(beds):
+        message = 'Beds successfully updated'
     return ({
         'message': message,
     })
