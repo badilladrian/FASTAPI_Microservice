@@ -3,10 +3,12 @@ from typing import List, Optional
 from MVC.models import (
     Bed,
     BedRequestCreate,
+    BedRequestUpdate,
     Plant,
     PlantRequestCreate,
     Yard,
     YardRequestCreate,
+    YardRequestUpdate,
 )
 
 from utils.db import session
@@ -51,6 +53,18 @@ class ControllerYards:
             result = True
         return result
 
+    # this method allows update one, update multi and update all
+    def update_multi(self, request: List[YardRequestUpdate]) -> bool:
+        result = False
+        if (request):
+            for _ in request:
+                yard = self.get_one(_.id)
+                if (yard):
+                    yard.update(_)
+                    session.commit()
+                    result = True
+        return result
+
 
 class ControllerBeds:
     _beds: List[Bed] = []
@@ -89,6 +103,18 @@ class ControllerBeds:
             session.delete(bed)
             session.commit
             result = True
+        return result
+
+    # this method allows update one, update multi and update all
+    def update_multi(self, request: List[BedRequestUpdate]) -> bool:
+        result = False
+        if (request):
+            for _ in request:
+                bed = self.get_one(_.id)
+                if (bed):
+                    bed.update(_)
+                    session.commit()
+                    result = True
         return result
 
 
