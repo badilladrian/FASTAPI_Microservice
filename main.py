@@ -50,9 +50,11 @@ app = FastAPI(
 
 @app.get('/', tags=["Farmly"])
 async def welcome():
-    return {
+    response = {
         'message': 'Welcome to the best farmer assistant app ever!',
+
     }
+    return response
 
 
 # Yard endpoints
@@ -62,64 +64,66 @@ async def welcome():
 # Create a new Yard
 @app.post('/yard', tags=["Yards"])
 def create_yard(request: list[YardRequestCreate]):
-    message = 'Yards couldn´t be created'
-    if yards_controller.create(request=request):
-        message = 'Yards created successfully'
-    return ({
-        'message': message,
-    })
+    response = {
+        'message': 'Yards couldn´t be created'
+    }
+    yards = yards_controller.create(request=request)
+    if yards:
+        response['message'] = 'Yards created successfully'
+        response['yards'] = yards
+    return response
 
 
 # GET
 # Get a all and multi yards
 @app.get('/yards', tags=["Yards"])
 async def get_yards(id: Optional[List[int]] = Query(None)):
-    message = 'Yards not found'
+    response = {
+        'message': 'Yards not found'
+    }
     yards = yards_controller.get_multi(id)
-    if (len(yards) > 0):
-        message = 'Listing yards'
-    return ({
-        'message': message,
-        'yards': yards,
-    })
+    if yards:
+        response['message'] = 'Listing yards'
+        response['yards'] = yards_controller.get_multi(id)
+    return response
 
 
 # Get a single yard
-@app.get('/yard/{yard_id}', tags=["Yards"])
+@app.get('/yard', tags=["Yards"])
 async def get_yard(id: int):
-    message = 'Yard not found'
+    response = {
+        'message': 'Yard not found'
+    }
     yard = yards_controller.get_one(id)
-    if (yard):
-        message = 'Yard found'
-    return ({
-        'message': message,
-        'yard': yard,
-    })
+    if yard:
+        response['message'] = 'Yard found'
+        response['yard'] = yard
+    return response
 
 
 # DELETE
 # Remove a single yard
-@app.delete('/yard/{yard_id}', tags=["Yards"])
+@app.delete('/yard', tags=["Yards"])
 def delete_yard(id: int):
-    message = 'Yard does not exist'
+    response = {
+        'message': 'Yard does not exist'
+    }
     if yards_controller.delete(id):
-        message = 'Yard successfully deleted'
-    return ({
-        'message': message,
-    })
+        response['message'] = 'Yard successfully deleted'
+    return response
 
 # PUT
 # Update a single yard
 
 
-@app.put('/yard/{yard_id}', tags=["Yards"])
+@app.put('/yard', tags=["Yards"])
 def update_yard(id: int, request: YardRequestUpdate):
-    message = 'Yard not found'
+    response = {
+        'message': 'Yard not found'
+    }
     if yards_controller.update(id, request):
-        message = 'Yard successfully updated'
-    return ({
-        'message': message,
-    })
+        response['message'] = 'Yard successfully updated'
+    return response
 
 
 # Bed endpoints
@@ -140,7 +144,7 @@ async def get_beds(id: Optional[List[int]] = Query(None)):
 
 
 # Get a single bed
-@app.get('/bed/{bed_id}', tags=["Beds"])
+@app.get('/bed', tags=["Beds"])
 async def get_bed(id: int = Query(None)):
     message = 'Beds not found'
     bed = beds_controller.get_one(id)
@@ -166,7 +170,7 @@ def create_bed(request: list[BedRequestCreate]):
 
 # DELETE
 # Remove a bed
-@app.delete('/bed/{bed_id}', tags=["Beds"])
+@app.delete('/bed', tags=["Beds"])
 def delete_bed(id: int):
     message = 'Bed does not exist'
     if beds_controller.delete(id):
@@ -178,7 +182,7 @@ def delete_bed(id: int):
 
 # PUT
 # Update a bed
-@app.put('/bed/{bed_id}', tags=["Beds"])
+@app.put('/bed', tags=["Beds"])
 def update_bed(id: int, request: BedRequestUpdate):
     message = 'Bed not found'
     if beds_controller.update(id, request):
@@ -206,7 +210,7 @@ async def get_plants(id: Optional[List[int]] = Query(None)):
 
 
 # Get a single plant
-@app.get('/plant/{plant_id}', tags=["Plants"])
+@app.get('/plant', tags=["Plants"])
 async def get_plant(id: int):
     message = 'Plant not found'
     plant = plants_controller.get_one(id)
@@ -232,7 +236,7 @@ def create_plant(request: list[PlantRequestCreate]):
 
 # DELETE
 # Remove a plant
-@app.delete('/plant/{plant_id}', tags=["Plants"])
+@app.delete('/plant', tags=["Plants"])
 def delete_plant(id: int):
     message = 'Plant does not exist'
     if plants_controller.delete(id):
@@ -244,7 +248,7 @@ def delete_plant(id: int):
 
 # Put
 # Update a plant
-@app.put('/plant/{plant_id}', tags=["Plants"])
+@app.put('/plant', tags=["Plants"])
 def update_plant(id: int, request: PlantRequestUpdate):
     message = 'Plant not found'
     if plants_controller.update(id, request):
