@@ -29,13 +29,46 @@ class Yard(Base):
     _beds = relationship('Bed')
 
     def __init__(self, name: str) -> None:
+        """
+            Create a new yard.
+
+        Args:
+            name(str): the name that is going to be provided to the new yard.
+        Returns:
+            None
+        Raises:
+            None
+        """
         self._name = name
 
     @staticmethod
     def create(request: YardRequestCreate) -> Yard:
+        """
+            Return a new yard.
+            
+        Args:
+            request(YardRequestCreate): this object could have the following attributes:
+                name(str)
+        Returns:
+            A Yard object
+        Raises:
+            None
+        """
         return Yard(request.name)
 
     def update(self, request: YardRequestUpdate) -> None:
+        """
+            Update a yard.
+            
+        Args:
+            request(YardRequestUpdate): this object could have the following attributes:
+                id(int)
+                name(str)
+        Returns:
+            None
+        Raises:
+            None
+        """
         if request.id:
             self._id = request.id
         if request.name:
@@ -60,14 +93,47 @@ class Bed(Base):
     _yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
     _plants = relationship('Plant')
 
-    def __init__(self, id: int) -> None:
-        self._yard_id = id
+    def __init__(self, yard_id: int) -> None:
+        """
+            Create a new bed.
+
+        Args:
+            yard_id(int): the id corresponding to the yard which the bed belongs.
+        Returns:
+            None
+        Raises:
+            None
+        """
+        self._yard_id = yard_id
 
     @staticmethod
     def create(request: BedRequestCreate) -> Bed:
+        """
+            Return a new bed.
+            
+        Args:
+            request(BedRequestCreate): this object could have the following attributes:
+                yard_id(int)
+        Returns:
+            A Bed object
+        Raises:
+            None
+        """
         return Bed(request.yard_id)
 
     def update(self, request: BedRequestUpdate) -> None:
+        """
+            Update a bed.
+            
+        Args:
+            request(BedRequestUpdate): this object could have the following attributes:
+                id(int)
+                yard_id(int)
+        Returns:
+            None
+        Raises:
+            None
+        """
         if request.id:
             self._id = request.id
         if request.yard_id:
@@ -80,7 +146,6 @@ class Bed(Base):
 class PlantRequestUpdate(BaseModel):
     id: Optional[int]
     name: Optional[str]
-    bed_id: Optional[int]
 
 
 class PlantRequestCreate(BaseModel):
@@ -95,20 +160,53 @@ class Plant(Base):
     _bed_id = Column('bed_id', Integer, ForeignKey('beds.id'))
 
     def __init__(self, name, bed_id) -> None:
+        """
+            Create a new plant.
+
+        Args:
+            name(str): the corresponding name for the new plant.
+            bed_id(int): the corresponding id for bed which the plant belogs.
+        Returns:
+            None
+        Raises:
+            None
+        """
         self._name = name
         self._bed_id = bed_id
 
     @staticmethod
     def create(request: PlantRequestCreate) -> Plant:
+        """
+            Return a new Plant.
+            
+        Args:
+            request(PlantRequestCreate): this object could have the following attributes:
+                bed_id(int)
+                name(str)
+        Returns:
+            A Plant object
+        Raises:
+            None
+        """
         return Plant(request.name, request.bed_id)
 
     def update(self, request: PlantRequestUpdate) -> None:
+        """
+            Update a plant.
+            
+        Args:
+            request(PlantRequestUpdate): this object could have the following attributes:
+                id(int)
+                name(str)
+        Returns:
+            None
+        Raises:
+            None
+        """
         if request.id:
             self._id = request.id
         if request.name:
             self._name = request.name
-        if request.name:
-            self._bed_id = request.bed_id
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name, 'bed_id': self._bed_id}
