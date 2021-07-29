@@ -4,7 +4,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    String
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -33,7 +38,8 @@ class Yard(Base):
             Create a new yard.
 
         Args:
-            name(str): the name that is going to be provided to the new yard.
+            name(str):
+            the name that is going to be provided to the new yard.
         Returns:
             None
         Raises:
@@ -45,9 +51,10 @@ class Yard(Base):
     def create(request: YardRequestCreate) -> Yard:
         """
             Return a new yard.
-            
+
         Args:
-            request(YardRequestCreate): this object could have the following attributes:
+            request(YardRequestCreate):
+            this object could have the following attributes:
                 name(str)
         Returns:
             A Yard object
@@ -59,9 +66,10 @@ class Yard(Base):
     def update(self, request: YardRequestUpdate) -> None:
         """
             Update a yard.
-            
+
         Args:
-            request(YardRequestUpdate): this object could have the following attributes:
+            request(YardRequestUpdate):
+            this object could have the following attributes:
                 id(int)
                 name(str)
         Returns:
@@ -98,7 +106,8 @@ class Bed(Base):
             Create a new bed.
 
         Args:
-            yard_id(int): the id corresponding to the yard which the bed belongs.
+            yard_id(int):
+            the id corresponding to the yard which the bed belongs.
         Returns:
             None
         Raises:
@@ -110,9 +119,10 @@ class Bed(Base):
     def create(request: BedRequestCreate) -> Bed:
         """
             Return a new bed.
-            
+
         Args:
-            request(BedRequestCreate): this object could have the following attributes:
+            request(BedRequestCreate):
+            this object could have the following attributes:
                 yard_id(int)
         Returns:
             A Bed object
@@ -124,9 +134,10 @@ class Bed(Base):
     def update(self, request: BedRequestUpdate) -> None:
         """
             Update a bed.
-            
+
         Args:
-            request(BedRequestUpdate): this object could have the following attributes:
+            request(BedRequestUpdate):
+            this object could have the following attributes:
                 id(int)
                 yard_id(int)
         Returns:
@@ -146,6 +157,7 @@ class Bed(Base):
 class PlantRequestUpdate(BaseModel):
     id: Optional[int]
     name: Optional[str]
+    bed_id: Optional[int]
 
 
 class PlantRequestCreate(BaseModel):
@@ -164,8 +176,10 @@ class Plant(Base):
             Create a new plant.
 
         Args:
-            name(str): the corresponding name for the new plant.
-            bed_id(int): the corresponding id for bed which the plant belogs.
+            name(str):
+            the corresponding name for the new plant.
+            bed_id(int):
+            the corresponding id for bed which the plant belogs.
         Returns:
             None
         Raises:
@@ -178,9 +192,10 @@ class Plant(Base):
     def create(request: PlantRequestCreate) -> Plant:
         """
             Return a new Plant.
-            
+
         Args:
-            request(PlantRequestCreate): this object could have the following attributes:
+            request(PlantRequestCreate):
+            this object could have the following attributes:
                 bed_id(int)
                 name(str)
         Returns:
@@ -193,9 +208,10 @@ class Plant(Base):
     def update(self, request: PlantRequestUpdate) -> None:
         """
             Update a plant.
-            
+
         Args:
-            request(PlantRequestUpdate): this object could have the following attributes:
+            request(PlantRequestUpdate):
+            this object could have the following attributes:
                 id(int)
                 name(str)
         Returns:
@@ -207,6 +223,8 @@ class Plant(Base):
             self._id = request.id
         if request.name:
             self._name = request.name
+        if request.bed_id:
+            self._bed_id = request.bed_id
 
     def __repr__(self):
         return {'id': self._id, 'name': self._name, 'bed_id': self._bed_id}
