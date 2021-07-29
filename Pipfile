@@ -19,6 +19,8 @@ python-dotenv = "*"
 pydantic = "*"
 pre-commit = "*"
 sqlalchemy = "*"
+pytest = "*"
+mock = "*"
 
 [requires]
 python_version = "3.9"
