@@ -10,7 +10,23 @@ from sqlalchemy.orm import relationship
 
 from utils.db import engine
 
+import logging
+
+
 Base = declarative_base()
+
+
+# Setting logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter(
+    "%(asctime)s:%(name)s-%(levelname)ss:%(message)s")
+file_handler = logging.FileHandler("logs/models.log")
+file_handler.setFormatter(formatter)
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.ERROR)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 
 class YardRequestUpdate(BaseModel):
@@ -39,13 +55,14 @@ class Yard(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Yard __init__ with name:{name}")
         self._name = name
 
     @staticmethod
     def create(request: YardRequestCreate) -> Yard:
         """
             Return a new yard.
-            
+
         Args:
             request(YardRequestCreate): this object could have the following attributes:
                 name(str)
@@ -54,12 +71,13 @@ class Yard(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Yard create with request:{request}")
         return Yard(request.name)
 
     def update(self, request: YardRequestUpdate) -> None:
         """
             Update a yard.
-            
+
         Args:
             request(YardRequestUpdate): this object could have the following attributes:
                 id(int)
@@ -69,6 +87,7 @@ class Yard(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Yard update with request:{request}")
         if request.id:
             self._id = request.id
         if request.name:
@@ -104,13 +123,14 @@ class Bed(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Bed __init__ with yard_id:{yard_id}")
         self._yard_id = yard_id
 
     @staticmethod
     def create(request: BedRequestCreate) -> Bed:
         """
             Return a new bed.
-            
+
         Args:
             request(BedRequestCreate): this object could have the following attributes:
                 yard_id(int)
@@ -119,12 +139,13 @@ class Bed(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Bed create with request:{request}")
         return Bed(request.yard_id)
 
     def update(self, request: BedRequestUpdate) -> None:
         """
             Update a bed.
-            
+
         Args:
             request(BedRequestUpdate): this object could have the following attributes:
                 id(int)
@@ -134,6 +155,7 @@ class Bed(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Bed update with request:{request}")
         if request.id:
             self._id = request.id
         if request.yard_id:
@@ -171,6 +193,8 @@ class Plant(Base):
         Raises:
             None
         """
+        logger.debug(
+            f"Executing Plant __init with name:{name}, bed_id:{bed_id} ")
         self._name = name
         self._bed_id = bed_id
 
@@ -178,7 +202,7 @@ class Plant(Base):
     def create(request: PlantRequestCreate) -> Plant:
         """
             Return a new Plant.
-            
+
         Args:
             request(PlantRequestCreate): this object could have the following attributes:
                 bed_id(int)
@@ -188,12 +212,13 @@ class Plant(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Plant create with request:{request}")
         return Plant(request.name, request.bed_id)
 
     def update(self, request: PlantRequestUpdate) -> None:
         """
             Update a plant.
-            
+
         Args:
             request(PlantRequestUpdate): this object could have the following attributes:
                 id(int)
@@ -203,6 +228,7 @@ class Plant(Base):
         Raises:
             None
         """
+        logger.debug(f"Executing Plant update with request:{request}")
         if request.id:
             self._id = request.id
         if request.name:
