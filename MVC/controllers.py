@@ -5,6 +5,9 @@ from MVC.models import (
     Bed,
     BedRequestCreate,
     BedRequestUpdate,
+    Garden,
+    GardenRequestCreate,
+    GardenRequestUpdate,
     Plant,
     PlantRequestCreate,
     PlantRequestUpdate,
@@ -93,7 +96,7 @@ class ControllerYards:
 
     def get_one(self, id) -> Yard:
         """
-            This method returns one yard, 
+            This method returns one yard,
 
         Args:
             id(id): the corresponding yard's id
@@ -115,10 +118,12 @@ class ControllerYards:
 
     def create(self, request: List[YardRequestCreate]) -> List[Yard]:
         """
-            This method creates one or more yards, 
+            This method creates one or more yards,
 
         Args:
-            request(List[YardRequestCreate]): list of YardRequestCreate objects per each Yard that is going to be created
+            request(List[YardRequestCreate]):
+                list of YardRequestCreate objects
+                per each Yard that is going to be created
         Returns:
             List[Yard]: list containing all the yards created
         Raises:
@@ -142,10 +147,11 @@ class ControllerYards:
 
     def delete(self, id) -> bool:
         """
-            This method deletes one yard, 
+            This method deletes one yard,
 
         Args:
-            id(int): corresponding yard's id for the one that is going to be deleted
+            id(int):
+                corresponding yard's id for the one that is going to be deleted
         Returns:
             bool: if deletetion was successfully execuded
         Raises:
@@ -169,11 +175,13 @@ class ControllerYards:
 
     def update(self, id: int, request: YardRequestUpdate) -> bool:
         """
-            This method updates one yard, 
-
+            This method updates one yard
         Args:
-            id(int): corresponding yard's id for the one that is going to be updated
-            request(YardRequestUpdate): Request containing the new values
+            id(int):
+                corresponding yard's id
+                for the one that is going to be updated
+            request(YardRequestUpdate):
+                Request containing the new values
         Returns:
             bool: if update was successfully execuded
         Raises:
@@ -193,6 +201,133 @@ class ControllerYards:
                 logger.info(f"Yard successfuly updated")
             except Exception:
                 logging.exception("Query was not executed")
+        return result
+
+
+class ControllerGardens:
+    _gardens: List[Garden] = []
+
+    def __init__(self) -> None:
+        """
+            Create a new garden's controller.
+
+        Args:
+            None
+        Returns:
+            None
+        Raises:
+            None
+        """
+        self._gardens = self.get_all()
+
+    def get_multi(self, request: Optional[List[int]] = None) -> List[Garden]:
+        """
+            This method returns from 1 to all the existing gardens,
+
+        Args:
+            request(Optional[List[int]]): List of the garden's ids
+        Returns:
+            List[Garden]: list of all the found garden
+        Raises:
+            None
+        """
+        gardens: List[Garden] = []
+        if (request):
+            for id in request:
+                garden = self.get_one(id)
+                if (garden):
+                    gardens.append(garden)
+        else:
+            gardens = self.get_all()
+        return gardens
+
+    def get_all(self) -> List[Garden]:
+        """
+            This method returns all the existing gardens,
+
+        Args:
+            None
+        Returns:
+            List[Garden]: list of all the existing gardens
+        Raises:
+            None
+        """
+        return session.query(Garden).all()
+
+    def get_one(self, id) -> Garden:
+        """
+            This method returns one garden,
+
+        Args:
+            id(id): the corresponding garden's id
+        Returns:
+            Garden: corresponding Garden object
+        Raises:
+            None
+        """
+        return session.query(Garden).get(id)
+
+    def create(self, request: List[GardenRequestCreate]) -> List[Garden]:
+        """
+            This method creates one or more gardens
+        Args:
+            request(List[GardenRequestCreate]):
+                list of GardenRequestCreate objects
+                per each Garden that is going to be created
+        Returns:
+            List[Garden]:
+                list containing all the gardens created
+        Raises:
+            None
+        """
+        self._gardens = [Garden.create(garden) for garden in request]
+        session.add_all(self._gardens)
+        session.commit
+        return self._gardens
+
+    def delete(self, id) -> bool:
+        """
+            This method deletes one garden
+        Args:
+            id(int):
+                corresponding garden's id for
+                the one that is going to be deleted
+        Returns:
+            bool:
+                if deletetion was successfully execuded
+        Raises:
+            None
+        """
+        result = False
+        yard = self.get_one(id)
+        if yard:
+            session.delete(yard)
+            session.commit
+            result = True
+        return result
+
+    def update(self, id: int, request: GardenRequestUpdate) -> bool:
+        """
+            This method updates one garden
+        Args:
+            id(int):
+                corresponding garden's id
+                for the one that is going to
+                be updated
+            request(GardenRequestUpdate):
+                Request containing the new values
+        Returns:
+            bool:
+                if update was successfully execuded
+        Raises:
+            None
+        """
+        result = False
+        garden = self.get_one(id)
+        if garden:
+            garden.update(request)
+            session.commit()
+            result = True
         return result
 
 
@@ -216,7 +351,7 @@ class ControllerBeds:
 
     def get_multi(self, request: Optional[List[int]] = None) -> List[Bed]:
         """
-            This method returns from 1 to all the existing beds, 
+            This method returns from 1 to all the existing beds,
 
         Args:
             request(Optional[List[int]]): List of the bed's ids
@@ -239,7 +374,7 @@ class ControllerBeds:
 
     def get_all(self) -> List[Bed]:
         """
-            This method returns all the existing beds, 
+            This method returns all the existing beds,
 
         Args:
             None
@@ -265,7 +400,7 @@ class ControllerBeds:
 
     def get_one(self, id: int) -> Bed:
         """
-            This method returns one bed, 
+            This method returns one bed,
 
         Args:
             id(id): the corresponding bed's id
@@ -288,12 +423,14 @@ class ControllerBeds:
 
     def create(self, request: list[BedRequestCreate]) -> list[Bed]:
         """
-            This method creates one or more beds, 
-
+            This method creates one or more beds
         Args:
-            request(List[BedRequestCreate]): list of a BedRequestCreate object per each Bed that is going to be created
+            request(List[BedRequestCreate]):
+                list of a BedRequestCreate object per
+                each Bed that is going to be created
         Returns:
-            List[Bed]: list containing all the beds created
+            List[Bed]:
+                list containing all the beds created
         Raises:
             None
         """
@@ -316,12 +453,14 @@ class ControllerBeds:
 
     def delete(self, id) -> bool:
         """
-            This method deletes one bed, 
-
+            This method deletes one bed
         Args:
-            id(int): corresponding bed's id for the one that is going to be deleted
+            id(int):
+                corresponding bed's id for
+                the one that is going to be deleted
         Returns:
-            bool: if deletetion was successfully execuded
+            bool:
+                if deletetion was successfully execuded
         Raises:
             None
         """
@@ -343,11 +482,12 @@ class ControllerBeds:
 
     def update(self, id: int, request: BedRequestUpdate) -> bool:
         """
-            This method updates one bed, 
-
+            This method updates one bed
         Args:
-            id(int): corresponding bed's id for the one that is going to be updated
-            request(BedRequestUpdate): Request containing the new values
+            id(int):
+                corresponding bed's id for the one that is going to be updated
+            request(BedRequestUpdate):
+                Request containing the new values
         Returns:
             bool: if update was successfully execuded
         Raises:
@@ -388,7 +528,7 @@ class ControllerPlants:
 
     def get_multi(self, request: Optional[List[int]] = None) -> List[Plant]:
         """
-            This method returns from 1 to all the existing plants, 
+            This method returns from 1 to all the existing plants,
 
         Args:
             request(Optional[List[int]]): List of the plant's ids
@@ -409,7 +549,7 @@ class ControllerPlants:
 
     def get_all(self) -> List[Plant]:
         """
-            This method returns all the existing plants, 
+            This method returns all the existing plants,
 
         Args:
             None
@@ -422,7 +562,7 @@ class ControllerPlants:
 
     def get_one(self, id: int) -> Plant:
         """
-            This method returns one plant, 
+            This method returns one plant,
 
         Args:
             id(id): the corresponding plant's id
@@ -445,12 +585,15 @@ class ControllerPlants:
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         """
-            This method creates one or more plants, 
+            This method creates one or more plants,
 
         Args:
-            request(List[PlantRequestCreate]): list of a PlantRequestCreate object per each Plant that is going to be created
+            request(List[PlantRequestCreate]):
+                list of a PlantRequestCreate object per
+                each Plant that is going to be created
         Returns:
-            List[Plant]: list containing all the plants created
+            List[Plant]:
+                list containing all the plants created
         Raises:
             None
         """
@@ -473,12 +616,14 @@ class ControllerPlants:
 
     def delete(self, id) -> bool:
         """
-            This method deletes one plant, 
-
+            This method deletes one plant
         Args:
-            id(int): corresponding plant's id for the one that is going to be deleted
+            id(int):
+                corresponding plant's id
+                for the one that is going to be deleted
         Returns:
-            bool: if deletetion was successfully execuded
+            bool:
+                if deletetion was successfully execuded
         Raises:
             None
         """
@@ -499,11 +644,13 @@ class ControllerPlants:
 
     def update(self, id: int, request: PlantRequestUpdate) -> bool:
         """
-            This method updates one plant, 
-
+            This method updates one plant
         Args:
-            id(int): corresponding plant's id for the one that is going to be updated
-            request(PlantRequestUpdate): Request containing the new values
+            id(int):
+                corresponding plant's id for
+                the one that is going to be updated
+            request(PlantRequestUpdate):
+                Request containing the new values
         Returns:
             bool: if update was successfully execuded
         Raises:

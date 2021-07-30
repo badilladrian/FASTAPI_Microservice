@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -43,6 +43,7 @@ class Yard(Base):
     _id = Column('id', Integer, primary_key=True)
     _name = Column('name', String)
     _beds = relationship('Bed')
+    _gardens = relationship('Garden')
 
     def __init__(self, name: str) -> None:
         """
@@ -94,30 +95,113 @@ class Yard(Base):
             self._name = request.name
 
     def __repr__(self):
-        return {'id': self._id, 'name': self._name, 'beds': self._beds}
+        return {'id': self._id, 'name': self._name, 'beds': self._beds, 'gardens': self._gardens}
+
+
+class GardenRequestUpdate(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    yard_id: Optional[int]
+
+
+class GardenRequestCreate(BaseModel):
+    name: str
+    yard_id: Optional[int]
+
+
+class Garden(Base):
+    __tablename__ = 'gardens'
+    _id = Column('id', Integer, primary_key=True)
+    _name = Column('name', String)
+    _yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
+    _beds = relationship('Bed')
+
+    def __init__(self, name: str, yard_id: Optional[int] = None) -> None:
+        """
+            Create a new garden.
+
+        Args:
+            name(str): the name that is going to be provided to the new garden.
+        Returns:
+            None
+        Raises:
+            None
+        """
+        self._name = name
+        if yard_id:
+            self._yard_id = yard_id
+
+    @staticmethod
+    def create(request: GardenRequestCreate) -> Garden:
+        """
+            Return a new garden.
+
+        Args:
+            request(GardenRequestCreate): this object could have the following attributes:
+                name(str)
+        Returns:
+            A Garden object
+        Raises:
+            None
+        """
+        if request.yard_id:
+            garden = Garden(request.name, request.yard_id)
+        else:
+            garden = Garden(request.name)
+        return garden
+
+    def update(self, request: GardenRequestUpdate) -> None:
+        """
+            Update a garden.
+
+        Args:
+            request(GardenRequestUpdate): this object could have the following attributes:
+                id(int)
+                name(str)
+        Returns:
+            None
+        Raises:
+            None
+        """
+        if request.id:
+            self._id = request.id
+        if request.name:
+            self._name = request.name
+        if request.yard_id:
+            self._yard_id = request.yard_id
+
+    def __repr__(self):
+        return {'id': self._id, 'name': self._name, 'yard_id': self._yard_id, 'beds': self._beds}
 
 
 class BedRequestUpdate(BaseModel):
     id: Optional[int]
     yard_id: Optional[int]
+    garden_id: Optional[int]
 
 
 class BedRequestCreate(BaseModel):
+    name: str
     yard_id: int
+    garden_id: int
 
 
 class Bed(Base):
     __tablename__ = 'beds'
     _id = Column('id', Integer, primary_key=True)
+    _name = Column('name', String)
     _yard_id = Column('yard_id', Integer, ForeignKey('yards.id'))
+    _garden_id = Column('garden_id', Integer, ForeignKey('gardens.id'))
     _plants = relationship('Plant')
 
-    def __init__(self, yard_id: int) -> None:
+    def __init__(self, name: str, yard_id: int, garden_id: Optional[int] = None) -> None:
         """
             Create a new bed.
 
         Args:
-            yard_id(int): the id corresponding to the yard which the bed belongs.
+            name(str): the corresponding name for the new bed.
+            yard_id(int): the corresponding id to the yard which the bed belongs.
+            garden_id(int): the corresponding id to the garden which the bed belongs.
         Returns:
             None
         Raises:
@@ -125,6 +209,8 @@ class Bed(Base):
         """
         logger.debug(f"Executing Bed __init__ with yard_id:{yard_id}")
         self._yard_id = yard_id
+        if garden_id:
+            self._garden = garden_id
 
     @staticmethod
     def create(request: BedRequestCreate) -> Bed:
@@ -139,8 +225,11 @@ class Bed(Base):
         Raises:
             None
         """
-        logger.debug(f"Executing Bed create with request:{request}")
-        return Bed(request.yard_id)
+        if request.garden_id:
+            bed = Bed(request.name, request.yard_id, request.garden_id)
+        else:
+            bed = Bed(request.name, request.yard_id)
+        return bed
 
     def update(self, request: BedRequestUpdate) -> None:
         """
@@ -160,9 +249,11 @@ class Bed(Base):
             self._id = request.id
         if request.yard_id:
             self._yard_id = request.yard_id
+        if request.garden_id:
+            self._garden_id = request.garden_id
 
     def __repr__(self):
-        return {'id': self._id, 'yard_id': self._yard_id, 'plants': self._plants}
+        return {'id': self._id, 'yard_id': self._yard_id, 'garden_id': self._yard_id, 'plants': self._plants}
 
 
 class PlantRequestUpdate(BaseModel):
