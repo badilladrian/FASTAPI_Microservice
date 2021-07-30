@@ -66,11 +66,30 @@ CREATE SEQUENCE IF NOT EXISTS public.yards_id_seq
 -- TABLE: public.yards
 CREATE TABLE IF NOT EXISTS public.yards (
     id integer NOT NULL DEFAULT nextval('yards_id_seq'::regclass),
-    name text COLLATE pg_catalog."default",
+    name text NOT NULL COLLATE pg_catalog."default",
     -- user_id integer NOT NULL,
     -- address_id integer NOT NULL,
     CONSTRAINT yards_pkey PRIMARY KEY (id)
     -- CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES public.addresses (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+    -- CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- SEQUENCE: public.gardens_id_seq
+CREATE SEQUENCE IF NOT EXISTS public.gardens_id_seq
+    INCREMENT 1 START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+-- TABLE: public.gardens
+CREATE TABLE IF NOT EXISTS public.gardens (
+    id integer NOT NULL DEFAULT nextval('gardens_id_seq'::regclass),
+    name text NOT NULL COLLATE pg_catalog."default",
+    yard_id integer,
+    -- user_id integer NOT NULL,
+    -- address_id integer NOT NULL,
+    CONSTRAINT gardens_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_yard_id FOREIGN KEY (yard_id) REFERENCES public.yards (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
     -- CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
@@ -85,8 +104,11 @@ CREATE SEQUENCE IF NOT EXISTS public.beds_id_seq
 -- TABLE: public.beds
 CREATE TABLE IF NOT EXISTS public.beds (
     id integer NOT NULL DEFAULT nextval('beds_id_seq'::regclass),
+    name text NOT NULL COLLATE pg_catalog."default",
     yard_id integer NOT NULL,
+    garden_id integer,
     CONSTRAINT beds_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_garden_id FOREIGN KEY (garden_id) REFERENCES public.gardens (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT fk_yard_id FOREIGN KEY (yard_id) REFERENCES public.yards (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
@@ -129,7 +151,7 @@ CREATE SEQUENCE IF NOT EXISTS public.plants_id_seq
 -- TABLE: public.plants
 CREATE TABLE IF NOT EXISTS public.plants (
     id integer NOT NULL DEFAULT nextval('plants_id_seq'::regclass),
-    name text COLLATE pg_catalog."default" NOT NULL,
+    name text NOT NULL COLLATE pg_catalog."default" NOT NULL,
     bed_id integer,
     -- plant_family_id integer,
     -- botanical_category_id integer,
