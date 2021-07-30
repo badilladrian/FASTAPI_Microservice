@@ -1,4 +1,5 @@
 from typing import List, Optional
+import logging
 
 from MVC.models import (
     Bed,
@@ -17,6 +18,18 @@ from MVC.models import (
 
 from utils.db import session
 
+# Setting logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter(
+    "%(asctime)s:%(name)s-%(levelname)ss:%(message)s")
+file_handler = logging.FileHandler("logs/controllers.log")
+file_handler.setFormatter(formatter)
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.ERROR)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
 
 class ControllerYards:
     _yards: List[Yard] = []
@@ -32,6 +45,7 @@ class ControllerYards:
         Raises:
             None
         """
+        logger.debug("Executing ControllerYards __init__")
         self._yards = self.get_all()
 
     def get_multi(self, request: Optional[List[int]] = None) -> List[Yard]:
@@ -45,6 +59,8 @@ class ControllerYards:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerYards get_multi with the following request param: {request}")
         yards: List[Yard] = []
         if (request):
             for id in request:
@@ -66,7 +82,17 @@ class ControllerYards:
         Raises:
             None
         """
-        return session.query(Yard).all()
+        logger.debug("Executing ControllerYards get_all")
+        try:
+            logger.debug("Quering database, fetching all Yards")
+            yards = session.query(Yard).all()
+            if yards:
+                logger.info("Query successfully executed")
+                return yards
+            else:
+                logger.warning("There are no yards at the database")
+        except Exception:
+            logger.exception("Query was not executed")
 
     def get_one(self, id) -> Yard:
         """
@@ -79,7 +105,16 @@ class ControllerYards:
         Raises:
             None
         """
-        return session.query(Yard).get(id)
+        logger.debug(f"Executing ControllerYards get_one with id: {id}")
+        try:
+            yard = session.query(Yard).get(id)
+            if yard:
+                logger.info(f"Yard {yard.__repr__()}, successfuly found")
+                return yard
+            else:
+                logger.warning(f"Yard: {id} not found")
+        except Exception:
+            logging.exception("Query was not executed")
 
     def create(self, request: List[YardRequestCreate]) -> List[Yard]:
         """
@@ -94,10 +129,21 @@ class ControllerYards:
         Raises:
             None
         """
-        self._yards = [Yard.create(yard) for yard in request]
-        session.add_all(self._yards)
-        session.commit
-        return self._yards
+        logger.debug(
+            f"Executing ControllerYards create with request: {request}")
+        try:
+            self._yards = [Yard.create(yard) for yard in request]
+            if self._yards:
+                logger.debug(
+                    f"Query to database, create yards")
+                session.add_all(self._yards)
+                session.commit
+                logger.info("Yards successfuly created")
+
+            else:
+                logger.warning("Yards not created")
+        except Exception:
+            logging.exception("Query was not executed")
 
     def delete(self, id) -> bool:
         """
@@ -111,12 +157,20 @@ class ControllerYards:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerYards delete with id: {id}")
         result = False
         yard = self.get_one(id)
         if yard:
-            session.delete(yard)
-            session.commit
-            result = True
+            try:
+                logger.debug(
+                    f"Query to datase delete with id: {id}")
+                session.delete(yard)
+                session.commit
+                result = True
+                logger.info(f"Yards successfuly deleted")
+            except Exception:
+                logging.exception("Query was not executed")
         return result
 
     def update(self, id: int, request: YardRequestUpdate) -> bool:
@@ -133,12 +187,20 @@ class ControllerYards:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerYards update with id: {id}")
         result = False
         yard = self.get_one(id)
         if yard:
-            yard.update(request)
-            session.commit()
-            result = True
+            try:
+                logger.debug(
+                    f"Query to datase update yard: {id}")
+                yard.update(request)
+                session.commit()
+                result = True
+                logger.info(f"Yard successfuly updated")
+            except Exception:
+                logging.exception("Query was not executed")
         return result
 
 
@@ -283,6 +345,8 @@ class ControllerBeds:
         Raises:
             None
         """
+        logger.debug(
+            "Executing ControllerBeds __init__()")
         self._beds = self.get_all()
 
     def get_multi(self, request: Optional[List[int]] = None) -> List[Bed]:
@@ -296,8 +360,10 @@ class ControllerBeds:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerBeds get_multi with request: {request}")
         beds: List[Bed] = []
-        if (request):
+        if request:
             for id in request:
                 bed = self.get_one(id)
                 if (bed):
@@ -313,11 +379,24 @@ class ControllerBeds:
         Args:
             None
         Returns:
-            List[Yard]: list of all the existing beds
+            List[Bed]: list of all the existing beds
         Raises:
             None
         """
-        return session.query(Bed).all()
+        logger.debug(
+            "Executing ControllerBeds get_all")
+        try:
+            logger.debug("Quering database, fetching all beds")
+            beds = session.query(Bed).all()
+            if beds:
+                logger.info("Query successfully executed")
+                return beds
+            else:
+                logger.warning("There are no beds at the database")
+        except Exception:
+            logger.exception("Query was not executed")
+
+        return beds
 
     def get_one(self, id: int) -> Bed:
         """
@@ -330,7 +409,17 @@ class ControllerBeds:
         Raises:
             None
         """
-        return session.query(Bed).get(id)
+        logger.debug(f"Executing ControllerBeds get_one with id: {id}")
+        try:
+            bed = session.query(Bed).get(id)
+            if bed:
+                logger.info(f"Bed {bed.__repr__()}, successfuly found")
+                return bed
+            else:
+                logger.warning(f"Bed: {id} not found")
+        except Exception:
+            logging.exception("Query was not executed")
+        return bed
 
     def create(self, request: list[BedRequestCreate]) -> list[Bed]:
         """
@@ -345,9 +434,21 @@ class ControllerBeds:
         Raises:
             None
         """
-        self._beds = [Bed.create(bed) for bed in request]
-        session.add_all(self._beds)
-        session.commit
+        logger.debug(
+            f"Executing ControllerBeds create with request: {request}")
+        try:
+            self._beds = [Bed.create(bed) for bed in request]
+            if self._beds:
+                logger.debug(
+                    f"Query to database, create beds")
+                session.add_all(self._beds)
+                session.commit
+                logger.info("Beds successfuly created")
+
+            else:
+                logger.warning("Beds not created")
+        except Exception:
+            logging.exception("Query was not executed")
         return self._beds
 
     def delete(self, id) -> bool:
@@ -363,12 +464,20 @@ class ControllerBeds:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerBeds delete with id: {id}")
         result = False
         bed = self.get_one(id)
         if bed:
-            session.delete(bed)
-            session.commit
-            result = True
+            try:
+                logger.debug(
+                    f"Query to datase delete with id: {id}")
+                session.delete(bed)
+                session.commit
+                result = True
+                logger.info(f"Beds successfuly deleted")
+            except Exception:
+                logging.exception("Query was not executed")
         return result
 
     def update(self, id: int, request: BedRequestUpdate) -> bool:
@@ -384,12 +493,20 @@ class ControllerBeds:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerBeds update with id: {id}")
         result = False
         bed = self.get_one(id)
-        if (bed):
-            bed.update(request)
-            session.commit()
-            result = True
+        if bed:
+            try:
+                logger.debug(
+                    f"Query to datase update bed: {id}")
+                bed.update(request)
+                session.commit()
+                result = True
+                logger.info(f"Bed successfuly updated")
+            except Exception:
+                logging.exception("Query was not executed")
         return result
 
 
@@ -454,7 +571,17 @@ class ControllerPlants:
         Raises:
             None
         """
-        return session.query(Plant).get(id)
+        logger.debug(f"Executing ControllerPlants get_one with id: {id}")
+        try:
+            plant = session.query(Plant).get(id)
+            if plant:
+                logger.info(f"Plant {plant.__repr__()}, successfuly found")
+                return plant
+            else:
+                logger.warning(f"Plant: {id} not found")
+        except Exception:
+            logging.exception("Query was not executed")
+        return plant
 
     def create(self, request: list[PlantRequestCreate]) -> list[Plant]:
         """
@@ -470,10 +597,22 @@ class ControllerPlants:
         Raises:
             None
         """
-        self._beds = [Plant.create(bed) for bed in request]
-        session.add_all(self._beds)
-        session.commit
-        return self._beds
+        logger.debug(
+            f"Executing ControllerPlants create with request: {request}")
+        try:
+            self._plants = [Plant.create(plant) for plant in request]
+            if self._plants:
+                logger.debug(
+                    f"Query to database, create plants")
+                session.add_all(self._plants)
+                session.commit
+                logger.info("Plants successfuly created")
+
+            else:
+                logger.warning("Plants not created")
+        except Exception:
+            logging.exception("Query was not executed")
+        return self._plants
 
     def delete(self, id) -> bool:
         """
@@ -488,13 +627,20 @@ class ControllerPlants:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerPlants delete with id: {id}")
         result = False
         plant = self.get_one(id)
         if plant:
-            session.delete(plant)
-            session.commit
-            result = True
-        return result
+            try:
+                logger.debug(
+                    f"Query to datase delete with id: {id}")
+                session.delete(plant)
+                session.commit
+                result = True
+                logger.info(f"Plants successfuly deleted")
+            except Exception:
+                logging.exception("Query was not executed")
 
     def update(self, id: int, request: PlantRequestUpdate) -> bool:
         """
@@ -510,10 +656,18 @@ class ControllerPlants:
         Raises:
             None
         """
+        logger.debug(
+            f"Executing ControllerPlants update with id: {id}")
         result = False
         plant = self.get_one(id)
-        if (plant):
-            plant.update(request)
-            session.commit()
-            result = True
+        if plant:
+            try:
+                logger.debug(
+                    f"Query to datase update plant: {id}")
+                plant.update(request)
+                session.commit()
+                result = True
+                logger.info(f"Plant successfuly updated")
+            except Exception:
+                logging.exception("Query was not executed")
         return result
