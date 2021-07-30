@@ -1,8 +1,11 @@
-# FASTAPI_Microservice  
+# FASTAPI_Microservice
 
 # INSTRUCTIONS
 
-pip install pipenv
+dos2unix ./utils/scripts/*
+
+pip install pipenv --dev
 pipenv shell
 pipenv install
-uvicorn main:app 
+
+uvicorn main:app
