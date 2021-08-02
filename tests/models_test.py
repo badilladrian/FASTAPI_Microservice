@@ -19,7 +19,7 @@ class TestYard:
             ('My first yard', 'My first yard'),
         ],
     )
-    def test_init__(self, name, expected_name):
+    def test__init__(self, name, expected_name):
         yard = Yard(name)
 
         assert isinstance(yard, Yard)
@@ -117,11 +117,11 @@ class TestGarden:
     # update a garden
     @pytest.mark.parametrize(
         (
-            'id, name, yard_id'
+            'id, name, yard_id,'
             'expected_id, expected_name, expected_yard_id'
         ), [
-            (10, 'Cillantro', 10, 10, 'Cillantro', 10),
-            (2, 'Beans', 2, 2, 'Beans', 2),
+            (10, 'My Garden', 10, 10, 'My Garden', 10),
+            (2, 'Adrian', 2, 2, 'Adrian', 2),
         ],
     )
     def test_update(
@@ -145,58 +145,77 @@ class TestGarden:
 class TestBed:
     # create a bed
     @ pytest.mark.parametrize(
-        'yard_id, expected_yard_id', [
-            (1, 1),
-            (8234, 8234),
+        'name, yard_id, garden_id,'
+        'expected_name, expected_yard_id, expected_garden_id', [
+            ('My bed', 1, None, 'My bed', 1, None),
+            ('Your bed', 8234, 1, 'Your bed', 8234, 1),
         ],
     )
-    def test_init__(self, yard_id, expected_yard_id):
-        bed = Bed(yard_id)
+    def test_init__(
+            self, name, yard_id, garden_id,
+            expected_name, expected_yard_id, expected_garden_id,
+    ):
+        bed = Bed(name, yard_id, garden_id)
 
         assert isinstance(bed, Bed)
+
+        assert bed._name == expected_name
         assert bed._yard_id == expected_yard_id
+        assert bed._garden_id == expected_garden_id
 
     # create a bed
     @pytest.mark.parametrize(
-        'yard_id, expected_yard_id', [
-            (1, 1),
-            (8234, 8234),
+        'name, yard_id, garden_id,'
+        'expected_name, expected_yard_id, expected_garden_id', [
+            ('My bed', 1, 1, 'My bed', 1, 1),
+            ('Your bed', 8234, None, 'Your bed', 8234, None),
         ],
     )
-    def test_create(self, yard_id, expected_yard_id):
-        real = Bed(expected_yard_id)
+    def test_create(
+            self, name, yard_id, garden_id,
+            expected_name, expected_yard_id, expected_garden_id,
+    ):
+        real = Bed(expected_name, expected_yard_id, expected_garden_id)
         mock = Mock()
+        mock.name = name
         mock.yard_id = yard_id
+        mock.garden_id = garden_id
 
         bed = real.create(mock)
 
         assert isinstance(bed, Bed)
+        assert bed._name == expected_name
         assert bed._yard_id == expected_yard_id
+        assert bed._garden_id == expected_garden_id
 
     # update a bed
     @pytest.mark.parametrize(
         (
-            'id, yard_id,'
-            'expected_id, expected_yard_id'
+            'id, name, yard_id, garden_id,'
+            'expected_id, expected_name, expected_yard_id, expected_garden_id'
         ), [
-            (10, 20, 10, 20),
-            (2, 1, 2, 1),
+            (10, 'My bed', 1, 1, 10, 'My bed', 1, 1),
+            (2, None, None, None, 2, 'test', 1, None),
         ],
     )
     def test_update(
-        self, id, yard_id,
-        expected_id, expected_yard_id,
+        self, id, name, yard_id, garden_id,
+        expected_id, expected_name, expected_yard_id, expected_garden_id,
     ):
-        bed = Bed(5)
+        bed = Bed('test', 1)
         mock = Mock()
         mock.id = id
+        mock.name = name
         mock.yard_id = yard_id
+        mock.garden_id = garden_id
 
         bed.update(mock)
 
         assert isinstance(bed, Bed)
         assert bed._id == expected_id
+        assert bed._name == expected_name
         assert bed._yard_id == expected_yard_id
+        assert bed._garden_id == expected_garden_id
 
 
 class TestPlant:
@@ -248,7 +267,7 @@ class TestPlant:
     # update a plant
     @pytest.mark.parametrize(
         (
-            'id, name, bed_id'
+            'id, name, bed_id,'
             'expected_id, expected_name, expected_bed_id'
         ), [
             (10, 'Cillantro', 10, 10, 'Cillantro', 10),

@@ -197,6 +197,7 @@ class Garden(Base):
 
 class BedRequestUpdate(BaseModel):
     id: Optional[int]
+    name: Optional[str]
     yard_id: Optional[int]
     garden_id: Optional[int]
 
@@ -236,10 +237,14 @@ class Bed(Base):
         Raises:
             None
         """
-        logger.debug(f'Executing Bed __init__ with yard_id:{yard_id}')
+        logger.debug(
+            f'Executing Bed __init__ with name: {name},'
+            f'yard_id: {yard_id} and garden_id: {garden_id}',
+        )
+        self._name = name
         self._yard_id = yard_id
         if garden_id:
-            self._garden = garden_id
+            self._garden_id = garden_id
 
     @staticmethod
     def create(request: BedRequestCreate) -> Bed:
@@ -249,7 +254,9 @@ class Bed(Base):
         Args:
             request(BedRequestCreate):
             this object could have the following attributes:
+                name(str)
                 yard_id(int)
+                garden_id(int)
         Returns:
             A Bed object
         Raises:
@@ -269,7 +276,9 @@ class Bed(Base):
             request(BedRequestUpdate):
             this object could have the following attributes:
                 id(int)
+                name(str)
                 yard_id(int)
+                garden_id(int)
         Returns:
             None
         Raises:
@@ -278,6 +287,8 @@ class Bed(Base):
         logger.debug(f'Executing Bed update with request:{request}')
         if request.id:
             self._id = request.id
+        if request.name:
+            self._name = request.name
         if request.yard_id:
             self._yard_id = request.yard_id
         if request.garden_id:
