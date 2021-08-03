@@ -85,6 +85,7 @@ CREATE SEQUENCE IF NOT EXISTS public.gardens_id_seq
 CREATE TABLE IF NOT EXISTS public.gardens (
     id integer NOT NULL DEFAULT nextval('gardens_id_seq'::regclass),
     name text NOT NULL COLLATE pg_catalog."default",
+    state text NOT NULL COLLATE pg_catalog."default",
     yard_id integer,
     -- user_id integer NOT NULL,
     -- address_id integer NOT NULL,
@@ -105,7 +106,8 @@ CREATE SEQUENCE IF NOT EXISTS public.beds_id_seq
 CREATE TABLE IF NOT EXISTS public.beds (
     id integer NOT NULL DEFAULT nextval('beds_id_seq'::regclass),
     name text NOT NULL COLLATE pg_catalog."default",
-    yard_id integer NOT NULL,
+    state text NOT NULL COLLATE pg_catalog."default",
+    yard_id integer,
     garden_id integer,
     CONSTRAINT beds_pkey PRIMARY KEY (id),
     CONSTRAINT fk_garden_id FOREIGN KEY (garden_id) REFERENCES public.gardens (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -152,6 +154,7 @@ CREATE SEQUENCE IF NOT EXISTS public.plants_id_seq
 CREATE TABLE IF NOT EXISTS public.plants (
     id integer NOT NULL DEFAULT nextval('plants_id_seq'::regclass),
     name text NOT NULL COLLATE pg_catalog."default" NOT NULL,
+    state text NOT NULL COLLATE pg_catalog."default",
     bed_id integer,
     -- plant_family_id integer,
     -- botanical_category_id integer,
