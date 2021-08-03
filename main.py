@@ -4,12 +4,15 @@ from fastapi import FastAPI, Query
 
 from MVC.controllers import (
     ControllerBeds,
+    ControllerGardens,
     ControllerPlants,
     ControllerYards,
 )
 from MVC.models import (
     BedRequestCreate,
     BedRequestUpdate,
+    GardenRequestUpdate,
+    GardenRequestCreate,
     PlantRequestCreate,
     PlantRequestUpdate,
     YardRequestCreate,
@@ -18,6 +21,7 @@ from MVC.models import (
 
 yards_controller = ControllerYards()
 beds_controller = ControllerBeds()
+gardens_controller = ControllerGardens()
 plants_controller = ControllerPlants()
 
 
@@ -29,6 +33,11 @@ tags_metadata = [
     {
         'name': 'Yards',
         'description': "Manage your yards, all yard's operations are here",
+    },
+    {
+        'name': 'Gardens',
+        'description': 'Manage your gardens,'
+        "all gardens's operations are here",
     },
     {
         'name': 'Beds',
@@ -84,7 +93,7 @@ async def get_yards(id: Optional[List[int]] = Query(None)):
     yards = yards_controller.get_multi(id)
     if yards:
         response['message'] = 'Listing yards'
-        response['yards'] = yards_controller.get_multi(id)
+        response['yards'] = yards
     return response
 
 
@@ -112,10 +121,9 @@ def delete_yard(id: int):
         response['message'] = 'Yard successfully deleted'
     return response
 
+
 # PUT
 # Update a single yard
-
-
 @app.put('/yard', tags=['Yards'])
 def update_yard(id: int, request: YardRequestUpdate):
     response = {
@@ -123,6 +131,74 @@ def update_yard(id: int, request: YardRequestUpdate):
     }
     if yards_controller.update(id, request):
         response['message'] = 'Yard successfully updated'
+    return response
+
+
+# Garden endpoints
+
+
+# POST
+# Create a new garden
+@app.post('/garden', tags=['Gardens'])
+def create_garden(request: list[GardenRequestCreate]):
+    response = {
+        'message': 'Garden couldn´t be created',
+    }
+    garden = gardens_controller.create(request=request)
+    if garden:
+        response['message'] = 'Garden created successfully'
+        response['garden'] = garden
+    return response
+
+
+# GET
+# Get a all and multi garden
+@app.get('/gardens', tags=['Gardens'])
+async def get_gardens(id: Optional[List[int]] = Query(None)):
+    response = {
+        'message': 'Gardens not found',
+    }
+    gardens = gardens_controller.get_multi(id)
+    if gardens:
+        response['message'] = 'Listing gardens'
+        response['gardens'] = gardens
+    return response
+
+
+# Get a single garden
+@app.get('/garden', tags=['Gardens'])
+async def get_garden(id: int):
+    response = {
+        'message': 'Garden not found',
+    }
+    garden = gardens_controller.get_one(id)
+    if garden:
+        response['message'] = 'Garden found'
+        response['garden'] = garden
+    return response
+
+
+# DELETE
+# Remove a single garden
+@app.delete('/garden', tags=['Gardens'])
+def delete_garden(id: int):
+    response = {
+        'message': 'Garden does not exist',
+    }
+    if gardens_controller.delete(id):
+        response['message'] = 'Gardens successfully deleted'
+    return response
+
+
+# PUT
+# Update a single garden
+@app.put('/garden', tags=['Gardens'])
+def update_garden(id: int, request: GardenRequestUpdate):
+    response = {
+        'message': 'Garden not found',
+    }
+    if gardens_controller.update(id, request):
+        response['message'] = 'Gardens successfully updated'
     return response
 
 
