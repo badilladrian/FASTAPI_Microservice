@@ -11,8 +11,8 @@ from MVC.controllers import (
 from MVC.models import (
     BedRequestCreate,
     BedRequestUpdate,
-    GardenRequestUpdate,
     GardenRequestCreate,
+    GardenRequestUpdate,
     PlantRequestCreate,
     PlantRequestUpdate,
     YardRequestCreate,
@@ -20,6 +20,7 @@ from MVC.models import (
 )
 
 yards_controller = ControllerYards()
+gardens_controller = ControllerGardens()
 beds_controller = ControllerBeds()
 gardens_controller = ControllerGardens()
 plants_controller = ControllerPlants()
@@ -152,7 +153,7 @@ def create_garden(request: list[GardenRequestCreate]):
 
 
 # GET
-# Get a all and multi garden
+# Get a all and multi gardens
 @app.get('/gardens', tags=['Gardens'])
 async def get_gardens(id: Optional[List[int]] = Query(None)):
     response = {
@@ -186,7 +187,7 @@ def delete_garden(id: int):
         'message': 'Garden does not exist',
     }
     if gardens_controller.delete(id):
-        response['message'] = 'Gardens successfully deleted'
+        response['message'] = 'Garden successfully deleted'
     return response
 
 
@@ -198,7 +199,7 @@ def update_garden(id: int, request: GardenRequestUpdate):
         'message': 'Garden not found',
     }
     if gardens_controller.update(id, request):
-        response['message'] = 'Gardens successfully updated'
+        response['message'] = 'Garden successfully updated'
     return response
 
 
